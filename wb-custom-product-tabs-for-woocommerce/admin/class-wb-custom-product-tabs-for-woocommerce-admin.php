@@ -768,4 +768,36 @@ class Wb_Custom_Product_Tabs_For_Woocommerce_Admin {
 
 		return $css;
 	}
+
+
+	/**
+     * Alter the buttons in the tab content editor.
+     * 
+     *  @since  1.2.3
+     *  @param  string[]   $buttons    Buttons.
+     *  @param  string     $editor_id  Editor Id.
+     *  @return string[]   $buttons    Buttons.
+     */
+	public function alter_editor_buttons( $buttons, $editor_id ) {
+
+		$allowed_editors = array( 'content', 'wb_tab_editor' );
+
+		// Only for tab editors.
+		if ( in_array( $editor_id, $allowed_editors ) ) {
+
+			global $post;
+
+			// Check the post type is global tab.
+			if ('content' === $editor_id && 
+				( empty( $post ) || empty( $post->post_type ) || 'wb-custom-tabs' !== $post->post_type )
+			) {
+				return $buttons;
+			}
+
+			// Add color buttons.
+			array_push( $buttons, 'forecolor', 'backcolor' );
+		}
+
+		return $buttons;
+	}
 }

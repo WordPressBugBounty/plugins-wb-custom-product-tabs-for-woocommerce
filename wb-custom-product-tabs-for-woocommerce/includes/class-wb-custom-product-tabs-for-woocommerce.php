@@ -70,7 +70,7 @@ class Wb_Custom_Product_Tabs_For_Woocommerce {
 		if ( defined( 'WB_CUSTOM_PRODUCT_TABS_FOR_WOOCOMMERCE_VERSION' ) ) {
 			$this->version = WB_CUSTOM_PRODUCT_TABS_FOR_WOOCOMMERCE_VERSION;
 		} else {
-			$this->version = '1.2.2';
+			$this->version = '1.2.3';
 		}
 		$this->plugin_name = 'wb-custom-product-tabs-for-woocommerce';
 
@@ -236,6 +236,14 @@ class Wb_Custom_Product_Tabs_For_Woocommerce {
 		* @since 1.1.13
 		*/
 		$this->loader->add_action( 'admin_head-edit.php', $plugin_admin, 'global_tabs_page_review_banner' );
+
+
+		/**
+		* Alter the options in the tab content editor.
+		* 	
+		* @since 1.2.3
+		*/
+		$this->loader->add_action( 'mce_buttons', $plugin_admin, 'alter_editor_buttons', 10, 2 );
 	}
 
 	/**

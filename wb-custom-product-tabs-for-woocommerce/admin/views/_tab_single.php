@@ -7,9 +7,13 @@ if (!defined('ABSPATH')) {
 <div class="wb_tab_panel wb_tab_panel_<?php echo esc_attr($tab_type);?>" title="<?php echo ($is_hidden_global_tab ? esc_attr__('This tab is not visible on the product page.', 'wb-custom-product-tabs-for-woocommerce') : '');?>">
 	<div class="wb_tab_panel_hd">
 		<span class="wb_tab_panel_hd_txt">
-			<?php echo esc_html(isset($tab_nickname) && $tab_nickname!="" ? $tab_nickname : $tab_title);?>
+			<?php 
+			if ( ! empty( $tab_nickname ) ) {
+				echo esc_html( $tab_nickname . " ($tab_title)" );
+			} else {
+				echo esc_html( $tab_title );
+			}
 
-			<?php
 			if($is_hidden_global_tab)
 			{
 				?>

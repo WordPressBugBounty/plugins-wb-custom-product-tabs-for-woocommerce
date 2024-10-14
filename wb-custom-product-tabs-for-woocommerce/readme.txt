@@ -1,11 +1,11 @@
 === Custom Product Tabs For WooCommerce ===
 Contributors: webbuilder143
 Donate link: https://www.buymeacoffee.com/webbuilder143
-Tags: product tabs, custom tabs, woocommerce custom tabs, tabs for woocommerce, tabs plugin
+Tags: product tabs, tab manager, woocommerce custom tabs, tabs for woocommerce, tabs plugin
 Requires at least: 3.5.0
 Tested up to: 6.6
 Requires PHP: 5.6
-Stable tag: 1.2.2
+Stable tag: 1.2.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -71,11 +71,17 @@ To add YouTube videos to the tab content, simply use the YouTube embed button lo
 == Screenshots ==
 
 1. Edit window for product specific tab
-2. Global tabs and product specific tabs in product edit page
+2. Global tabs and product-specific tabs on the product edit page
 3. Global product tabs
 4. Edit window for global product tab
 
 == Changelog ==
+
+= 1.2.3 =
+* Tested with WC 9.3.3
+* Tested with WP 6.6.2
+* [Add] Added text color and background color options in the tab content editor.
+* [Tweak] Displaying tab title along with tab nickname to avoid confusion on the editor screen.
 
 = 1.2.2 =
 * Tested with WC 9.3.2
@@ -203,6 +209,8 @@ To add YouTube videos to the tab content, simply use the YouTube embed button lo
 
 == Upgrade Notice ==
 
-= 1.2.2 =
-* Tested with WC 9.3.2
-* [Fix] Some CSS styles were being trimmed while saving the tabs.
+= 1.2.3 =
+* Tested with WC 9.3.3
+* Tested with WP 6.6.2
+* [Add] Added text color and background color options in the tab content editor.
+* [Tweak] Displaying tab title along with tab nickname to avoid confusion on the editor screen.
