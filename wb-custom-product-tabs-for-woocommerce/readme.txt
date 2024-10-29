@@ -5,7 +5,7 @@ Tags: product tabs, tab manager, woocommerce custom tabs, tabs for woocommerce, 
 Requires at least: 3.5.0
 Tested up to: 6.6
 Requires PHP: 5.6
-Stable tag: 1.2.3
+Stable tag: 1.2.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -76,6 +76,13 @@ To add YouTube videos to the tab content, simply use the YouTube embed button lo
 4. Edit window for global product tab
 
 == Changelog ==
+
+= 1.2.4 =
+* Tested with WC 9.4
+* Tested with WP 6.7
+* [Improvement] Polylang compatibility.
+* [Compatibility] WooCommerce Brands, Plugin: Perfect Brands for WooCommerce.
+* [Tweak] Tab headings are now visible by default.
 
 = 1.2.3 =
 * Tested with WC 9.3.3
@@ -209,8 +216,9 @@ To add YouTube videos to the tab content, simply use the YouTube embed button lo
 
 == Upgrade Notice ==
 
-= 1.2.3 =
-* Tested with WC 9.3.3
-* Tested with WP 6.6.2
-* [Add] Added text color and background color options in the tab content editor.
-* [Tweak] Displaying tab title along with tab nickname to avoid confusion on the editor screen.
+= 1.2.4 =
+* Tested with WC 9.4
+* Tested with WP 6.7
+* [Improvement] Polylang compatibility.
+* [Compatibility] WooCommerce Brands, Plugin: Perfect Brands for WooCommerce.
+* [Tweak] Tab headings are now visible by default.

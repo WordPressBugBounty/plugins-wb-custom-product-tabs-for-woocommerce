@@ -70,7 +70,7 @@ class Wb_Custom_Product_Tabs_For_Woocommerce {
 		if ( defined( 'WB_CUSTOM_PRODUCT_TABS_FOR_WOOCOMMERCE_VERSION' ) ) {
 			$this->version = WB_CUSTOM_PRODUCT_TABS_FOR_WOOCOMMERCE_VERSION;
 		} else {
-			$this->version = '1.2.3';
+			$this->version = '1.2.4';
 		}
 		$this->plugin_name = 'wb-custom-product-tabs-for-woocommerce';
 
@@ -244,6 +244,14 @@ class Wb_Custom_Product_Tabs_For_Woocommerce {
 		* @since 1.2.3
 		*/
 		$this->loader->add_action( 'mce_buttons', $plugin_admin, 'alter_editor_buttons', 10, 2 );
+		
+
+		/**
+		* Add global tabs to polylang custom post type list.
+		* 	
+		* @since 1.2.4
+		*/
+		$this->loader->add_filter( 'pll_get_post_types', $plugin_admin, 'add_global_tabs_to_pll_post_type_list', 11 );
 	}
 
 	/**
@@ -320,11 +328,22 @@ class Wb_Custom_Product_Tabs_For_Woocommerce {
 	 * @param     string 	term name
 	 * @return    array    term IDs array
 	 */
-	private static function _get_product_term_ids($product_id, $term)
-	{
-		$terms=get_the_terms($product_id, $term);
-		$terms=($terms && is_array($terms) ? $terms : array());
-		return array_column($terms, 'term_id');
+	public static function _get_product_term_ids( $product_id, $term ) {
+		$terms = get_the_terms( $product_id, $term );
+		$terms = ( $terms && is_array( $terms ) ? $terms : array() );
+
+		/**
+		 * 	Alter product term ids.
+		 * 
+		 * 	@since 1.2.4
+		 * 	@param array    Term ids array.
+		 * 	@param int      Product id.
+		 * 	@param string   Term name.
+		 * 	@return array    Term ids array.
+		 */
+		$term_ids = apply_filters( 'wb_cptb_product_term_ids', array_column( $terms, 'term_id' ), $product_id, $term );
+
+		return is_array( $term_ids ) ? $term_ids : array();
 	}
 
 
@@ -332,6 +351,7 @@ class Wb_Custom_Product_Tabs_For_Woocommerce {
 	 * Get custom tabs of a product
 	 *
 	 * @since     1.0.2
+	 * @since     1.2.4 				Added compatibility for brands.
 	 * @param     WC_Product object   	$product  
 	 * @param     boolean   			$sort  			Sort the product based on tab position
 	 * @return    array     			Product tabs
@@ -355,23 +375,46 @@ class Wb_Custom_Product_Tabs_For_Woocommerce {
 		/* Taking tags */
 		$tag_id_arr=self::_get_product_term_ids($product_id, 'product_tag');
 
+		$tax_query = array(
+			'relation'=>'OR',
+	        array(
+	            'taxonomy'=>'product_cat',
+	            'field'=>'ID',
+	            'terms'=>$cat_id_arr,
+	            'include_children' => apply_filters('wb_cptb_include_child_category_tabs', false),
+	        ),
+	        array(
+	            'taxonomy'=>'product_tag',
+	            'field'=>'ID',
+	            'terms'=>$tag_id_arr,
+	        ),
+	    );
+
+
+		// Add compatibility for thirdparty brand plugins.
+	    $brand_taxonamies = self::_get_thirdparty_brand_taxonamies();
+
+	    foreach ( $brand_taxonamies as $brand_taxonamy ) {
+	    	if ( ! is_string( $brand_taxonamy ) ) {
+	    		continue;
+	    	}
+
+	    	$brand_id_arr = self::_get_product_term_ids( $product_id, $brand_taxonamy );
+
+	    	if ( ! empty( $brand_id_arr ) ) {
+		    	$tax_query[] = array(
+		            'taxonomy' 	=> $brand_taxonamy,
+		            'field' 	=> 'ID',
+		            'terms' 	=> $brand_id_arr,
+		        );
+		    }
+	    }
+	    
+
 		$query = new WP_Query(
 			array(
-				'post_type'=>WB_TAB_POST_TYPE,
-				'tax_query'=>array(
-					'relation'=>'OR',
-			        array(
-			            'taxonomy'=>'product_cat',
-			            'field'=>'ID',
-			            'terms'=>$cat_id_arr,
-			            'include_children' => apply_filters('wb_cptb_include_child_category_tabs', true),
-			        ),
-			        array(
-			            'taxonomy'=>'product_tag',
-			            'field'=>'ID',
-			            'terms'=>$tag_id_arr,
-			        ),
-			    )
+				'post_type' => WB_TAB_POST_TYPE,
+				'tax_query' => $tax_query,
 			)
 		 );
 
@@ -430,5 +473,27 @@ class Wb_Custom_Product_Tabs_For_Woocommerce {
 		}
 
 		return $category_ids;
+	}
+
+
+	/**
+	 * 	Get third party brand taxonamies.
+	 * 
+	 *  @since  1.2.4
+	 * 	@param  string[] Brand taxonamies
+	 * 	@return string[] Brand taxonamies
+	 */
+	public static function _get_thirdparty_brand_taxonamies() {
+		
+		/**
+		 * 	Alter third party brand taxonamies.
+		 * 
+		 *  @since  1.2.4
+		 * 	@param  string[] Brand taxonamies
+		 * 	@return string[] Brand taxonamies
+		 */
+		$brand_taxonomy_arr = apply_filters( 'wb_cptb_thirdparty_brand_taxonamies', array( 'pwb-brand' ) ) ;
+
+		return is_array( $brand_taxonomy_arr ) ? $brand_taxonomy_arr : array();
 	}
 }

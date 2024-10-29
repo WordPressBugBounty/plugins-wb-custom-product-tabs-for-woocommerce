@@ -125,13 +125,14 @@ class Wb_Custom_Product_Tabs_For_Woocommerce_Public {
 	{
 		/**
 		 * 	Hide tab heading in the tab content
-		 * 	Default: true
+		 * 	Default: false
 		 * 	
 		 * 	@since 1.1.7
+		 * 	@since 1.2.4        The default value changed from `true` to `false`.
 		 * 	@param bool  		True for hidden
 		 * 	@param string|int  	Tab id/key
 		 */
-		$hide_heading = apply_filters('wb_cptb_hide_heading_in_tab_content', true, $key);
+		$hide_heading = apply_filters('wb_cptb_hide_heading_in_tab_content', false, $key);
 		
 		if(!$hide_heading)
 		{

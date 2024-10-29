@@ -178,11 +178,24 @@ class Wb_Custom_Product_Tabs_For_Woocommerce_Admin {
 	}
 
 	/**
-	 *	@since 1.0.2
-	 *	Register global tabs as custom post type
+	 * 	Register global tabs as custom post type
+	 *	
+	 *  @since 1.0.2
+	 *  @since 1.2.4 Added compatibility for brands.	
 	 */
 	public function register_global_tabs()
 	{
+		$taxonomies = array( 'product_cat',  'product_tag' );
+
+		// Add compatibility for thirdparty brand plugins.
+	    $brand_taxonamies = Wb_Custom_Product_Tabs_For_Woocommerce::_get_thirdparty_brand_taxonamies();
+
+	    foreach ( $brand_taxonamies as $brand_taxonamy ) {
+	    	if ( is_string( $brand_taxonamy ) ) {
+	    		$taxonomies[] = $brand_taxonamy;
+	    	}
+	    }
+
 		register_post_type(WB_TAB_POST_TYPE,
 	        array(
 	            'labels' => array(
@@ -215,7 +228,7 @@ class Wb_Custom_Product_Tabs_For_Woocommerce_Admin {
 	            ),
 	            'show_ui' => true,
 	            'has_archive' => false,
-	            'taxonomies'   => array( 'product_cat',  'product_tag' ),
+	            'taxonomies'   => $taxonomies,
 	            'show_in_menu' => 'edit.php?post_type=product'
 	        )
 	    );
@@ -800,4 +813,21 @@ class Wb_Custom_Product_Tabs_For_Woocommerce_Admin {
 
 		return $buttons;
 	}
+
+
+	/**
+	 * 	Add global tabs to polylang custom post type list.
+	 * 	
+	 * 	@since  1.2.4
+	 * 	@param 	array 	$post_types 	Post types array.
+	 * 	@return array 	$post_types 	Post types array.
+	 */
+	public function add_global_tabs_to_pll_post_type_list( $post_types ) {
+		
+		if ( isset( $post_types['product'] ) ) {
+			$post_types[ WB_TAB_POST_TYPE ] = WB_TAB_POST_TYPE;
+		}
+
+		return $post_types;
+	} 
 }
