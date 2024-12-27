@@ -18,7 +18,7 @@ if (!defined('ABSPATH')) {
 			{
 				?>
 				<span class="wb_tab_panel_global_tab_not_published">
-					⚠ <?php _e('Not published', 'wb-custom-product-tabs-for-woocommerce'); ?>						
+					⚠ <?php esc_html_e('Not published', 'wb-custom-product-tabs-for-woocommerce'); ?>						
 				</span>
 				<?php
 			}
@@ -28,10 +28,10 @@ if (!defined('ABSPATH')) {
 		if($tab_type=='local')
 		{
 		?>
-			<div class="wb_tab_panel_delete" title="<?php _e('Delete tab', 'wb-custom-product-tabs-for-woocommerce'); ?>">
+			<div class="wb_tab_panel_delete" title="<?php esc_html_e('Delete tab', 'wb-custom-product-tabs-for-woocommerce'); ?>">
 				<span class="dashicons dashicons-trash" style="line-height:30px;"></span>
 			</div>
-			<div class="wb_tab_panel_edit" title="<?php _e('Edit tab', 'wb-custom-product-tabs-for-woocommerce'); ?>">
+			<div class="wb_tab_panel_edit" title="<?php esc_html_e('Edit tab', 'wb-custom-product-tabs-for-woocommerce'); ?>">
 				<span class="dashicons dashicons-edit" style="line-height:30px;"></span>
 			</div>
 		<?php
@@ -39,9 +39,9 @@ if (!defined('ABSPATH')) {
 		{
 			?>
 			<a class="wb_tab_panel_global_tab_not_edit_link" href="<?php echo esc_url($tab_edit_url);?>" target="_blank">
-				<?php _e('Edit', 'wb-custom-product-tabs-for-woocommerce'); ?> <span class="dashicons dashicons-external"></span>	
+				<?php esc_html_e('Edit', 'wb-custom-product-tabs-for-woocommerce'); ?> <span class="dashicons dashicons-external"></span>	
 			</a>
-			<div class="wb_tab_panel_global_tab_label"><?php _e('Global tab', 'wb-custom-product-tabs-for-woocommerce'); ?></div>
+			<div class="wb_tab_panel_global_tab_label"><?php esc_html_e('Global tab', 'wb-custom-product-tabs-for-woocommerce'); ?></div>
 			<?php
 		}
 		?>	
@@ -52,22 +52,22 @@ if (!defined('ABSPATH')) {
 		{
 		?>
 			<div class="wb_tab_panel_frmgrp">
-				<label><?php _e('Tab title', 'wb-custom-product-tabs-for-woocommerce');?><span class="woocommerce-help-tip" data-tip="<?php _e('Title for tab', 'wb-custom-product-tabs-for-woocommerce'); ?>"></span></label>
-				<input type="text" name="wb_tab[<?php echo esc_attr($key);?>][title]" class="wb_tabpanel_txt wb_tab_title_input" placeholder="<?php _e('Title for tab', 'wb-custom-product-tabs-for-woocommerce'); ?>" value="<?php echo esc_attr($tab_title);?>">
+				<label><?php esc_html_e('Tab title', 'wb-custom-product-tabs-for-woocommerce');?><span class="woocommerce-help-tip" data-tip="<?php esc_attr_e('Title for tab', 'wb-custom-product-tabs-for-woocommerce'); ?>"></span></label>
+				<input type="text" name="wb_tab[<?php echo esc_attr($key);?>][title]" class="wb_tabpanel_txt wb_tab_title_input" placeholder="<?php esc_attr_e('Title for tab', 'wb-custom-product-tabs-for-woocommerce'); ?>" value="<?php echo esc_attr($tab_title);?>">
 				<div class="wb_tab_er"></div>
 			</div>
 			<div class="wb_tab_panel_frmgrp">
-				<label><?php _e('Tab content', 'wb-custom-product-tabs-for-woocommerce');?><span class="woocommerce-help-tip" data-tip="<?php _e('Content for tab', 'wb-custom-product-tabs-for-woocommerce'); ?>"></span></label>
-				<textarea name="wb_tab[<?php echo esc_attr($key);?>][content]" class="wb_tabpanel_txtarea wb_tab_content_input" placeholder="<?php _e('Content for tab', 'wb-custom-product-tabs-for-woocommerce'); ?>" rows="4"><?php echo esc_textarea(stripslashes($tab_content));?></textarea>
+				<label><?php esc_html_e('Tab content', 'wb-custom-product-tabs-for-woocommerce');?><span class="woocommerce-help-tip" data-tip="<?php esc_attr_e('Content for tab', 'wb-custom-product-tabs-for-woocommerce'); ?>"></span></label>
+				<textarea name="wb_tab[<?php echo esc_attr($key);?>][content]" class="wb_tabpanel_txtarea wb_tab_content_input" placeholder="<?php esc_attr_e('Content for tab', 'wb-custom-product-tabs-for-woocommerce'); ?>" rows="4"><?php echo esc_textarea(stripslashes($tab_content));?></textarea>
 			</div>
 			<div class="wb_tab_panel_frmgrp">
-				<label><?php _e('Tab position', 'wb-custom-product-tabs-for-woocommerce');?><span class="woocommerce-help-tip" data-tip="<?php _e('Tab position', 'wb-custom-product-tabs-for-woocommerce'); ?>"></span></label>
-				<input type="number" min="0" step="1" name="wb_tab[<?php echo esc_attr($key);?>][position]" class="wb_tabpanel_txt wb_tab_position_input" placeholder="<?php _e('Tab position', 'wb-custom-product-tabs-for-woocommerce'); ?>" value="<?php echo esc_attr($position);?>">
+				<label><?php esc_html_e('Tab position', 'wb-custom-product-tabs-for-woocommerce');?><span class="woocommerce-help-tip" data-tip="<?php esc_attr_e('Tab position', 'wb-custom-product-tabs-for-woocommerce'); ?>"></span></label>
+				<input type="number" min="0" step="1" name="wb_tab[<?php echo esc_attr($key);?>][position]" class="wb_tabpanel_txt wb_tab_position_input" placeholder="<?php esc_attr_e('Tab position', 'wb-custom-product-tabs-for-woocommerce'); ?>" value="<?php echo esc_attr($position);?>">
 				<div class="wb_tab_er"></div>
 			</div>
 			<div class="wb_tab_panel_frmgrp">
-				<label><?php _e('Tab nickname', 'wb-custom-product-tabs-for-woocommerce');?><span class="woocommerce-help-tip" data-tip="<?php _e('Tab nickname', 'wb-custom-product-tabs-for-woocommerce'); ?>"></span></label>
-				<input type="text" name="wb_tab[<?php echo esc_attr($key);?>][nickname]" class="wb_tabpanel_txt wb_tab_nickname_input" placeholder="<?php _e('Tab nickname', 'wb-custom-product-tabs-for-woocommerce'); ?>" value="<?php echo esc_attr($tab_nickname);?>">
+				<label><?php esc_html_e('Tab nickname', 'wb-custom-product-tabs-for-woocommerce');?><span class="woocommerce-help-tip" data-tip="<?php esc_attr_e('Tab nickname', 'wb-custom-product-tabs-for-woocommerce'); ?>"></span></label>
+				<input type="text" name="wb_tab[<?php echo esc_attr($key);?>][nickname]" class="wb_tabpanel_txt wb_tab_nickname_input" placeholder="<?php esc_attr_e('Tab nickname', 'wb-custom-product-tabs-for-woocommerce'); ?>" value="<?php echo esc_attr($tab_nickname);?>">
 				<div class="wb_tab_er"></div>
 			</div>
 		<?php

@@ -7,13 +7,6 @@ class Wb_Custom_Product_Tabs_For_Woocommerce_Feedback {
 	private $reasons = array();
 	public function __construct() {
 
-		$this->reasons = array(
-			'not-working' => __('Not working', 'wb-custom-product-tabs-for-woocommerce'),
-			'found-better' => __('Found better', 'wb-custom-product-tabs-for-woocommerce'),
-			'not-meet-my-requirements' => __("It doesn't meet my requirements", 'wb-custom-product-tabs-for-woocommerce'),
-			'other' => __("Other", 'wb-custom-product-tabs-for-woocommerce'),
-		);
-
         add_action( 'admin_footer', array($this, 'add_content') );
         add_action( 'wp_ajax_wb_cptb_submit_feedback', array($this, "submit_feedback") );
     }
@@ -23,6 +16,13 @@ class Wb_Custom_Product_Tabs_For_Woocommerce_Feedback {
         if ( 'plugins.php' !== $pagenow ) {
             return;
         }
+
+        $this->reasons = array(
+            'not-working' => __('Not working', 'wb-custom-product-tabs-for-woocommerce'),
+            'found-better' => __('Found better', 'wb-custom-product-tabs-for-woocommerce'),
+            'not-meet-my-requirements' => __("It doesn't meet my requirements", 'wb-custom-product-tabs-for-woocommerce'),
+            'other' => __("Other", 'wb-custom-product-tabs-for-woocommerce'),
+        );
 
         ?>
         <style type="text/css">
@@ -65,6 +65,7 @@ class Wb_Custom_Product_Tabs_For_Woocommerce_Feedback {
                             action: 'wb_cptb_submit_feedback',
                             reason: jQuery('[name="wb-cptb-uninstall-reason"]').val(),
                             reason_brief: jQuery('[name="wb-cptb-uninstall-reason-brief"]').val(),
+                            nonce: '<?php echo esc_html( wp_create_nonce('wb_feedback_submit') );?>',
                         },
                         complete:function() {
                             window.location.href = jQuery('.wb-cptb-skip-and-deactivate').attr('href');
@@ -113,8 +114,13 @@ class Wb_Custom_Product_Tabs_For_Woocommerce_Feedback {
     public function submit_feedback() {
     	global $wpdb;
 
+        $nonce = isset($_POST['nonce']) ? sanitize_text_field( wp_unslash($_POST['nonce']) ) : '';
+        if ( ! wp_verify_nonce( $nonce, 'wb_feedback_submit') ) {
+            return;
+        }
+
         if (!isset($_POST['reason']) && 
-        	(isset($_POST['reason']) && "" === trim($_POST['reason'])) 
+        	(isset($_POST['reason']) && "" === trim(sanitize_text_field( wp_unslash($_POST['reason'])))) 
         ) {
             return;
         }
@@ -123,9 +129,9 @@ class Wb_Custom_Product_Tabs_For_Woocommerce_Feedback {
             'plugin' 			=> "wb_cptb",
             'version' 			=> WB_CUSTOM_PRODUCT_TABS_FOR_WOOCOMMERCE_VERSION,
             'date' 				=> gmdate("M d, Y h:i:s A"),
-            'reason' 			=> sanitize_text_field($_POST['reason']),
-            'reason_brief' 		=> isset($_REQUEST['reason_brief']) ? trim(stripslashes($_REQUEST['reason_brief'])) : '',
-            'software' 			=> $_SERVER['SERVER_SOFTWARE'],
+            'reason' 			=> sanitize_text_field(wp_unslash($_POST['reason'])),
+            'reason_brief' 		=> isset($_REQUEST['reason_brief']) ? trim(sanitize_text_field( wp_unslash($_REQUEST['reason_brief']))) : '',
+            'software' 			=> isset($_SERVER['SERVER_SOFTWARE']) ? sanitize_text_field( wp_unslash($_SERVER['SERVER_SOFTWARE'])) : '',
             'php_version' 		=> phpversion(),
             'mysql_version' 	=> $wpdb->db_version(),
             'wp_version' 		=> get_bloginfo('version'),

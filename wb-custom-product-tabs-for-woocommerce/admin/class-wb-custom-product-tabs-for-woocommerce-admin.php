@@ -121,7 +121,7 @@ class Wb_Custom_Product_Tabs_For_Woocommerce_Admin {
 	 *	@since 1.0.0
 	 *	@since 1.1.2 Nickname option added for product specific tabs
 	 */
-	private function sanitize_tab_input($arr)
+	private function sanitize_tab_input()
 	{
 		/**
          * Extend tab content allowed HTML tags while sanitizing tab content.
@@ -140,15 +140,15 @@ class Wb_Custom_Product_Tabs_For_Woocommerce_Admin {
 
 
 		$out=array();
-		foreach($arr as $ar)
-		{
-			$title=sanitize_text_field(trim($ar['title']));
-			$content=wp_kses_post(trim($ar['content']));
-			$position=absint($ar['position']);
-			$nickname=sanitize_text_field(trim($ar['nickname']));
+		for ( $i = 0; $i < 100000; $i++ ) {
 
-			if($title!="") //skip empty tabs
-			{
+			// phpcs:disable WordPress.Security.NonceVerification.Missing -- nonce is already verified.
+			$title = isset( $_POST['wb_tab'][ $i ]['title'] ) ? trim(sanitize_text_field(wp_unslash($_POST['wb_tab'][ $i ]['title']))) : '';
+			$content = isset( $_POST['wb_tab'][ $i ]['content'] ) ? trim(wp_kses_post(wp_unslash($_POST['wb_tab'][ $i ]['content']))) : '';
+			$position = (int) isset( $_POST['wb_tab'][ $i ]['position'] ) ? sanitize_text_field(wp_unslash($_POST['wb_tab'][ $i ]['position'])) : 0;
+			$nickname = isset( $_POST['wb_tab'][ $i ]['nickname'] ) ? trim(sanitize_text_field(wp_unslash($_POST['wb_tab'][ $i ]['nickname']))) : '';
+
+			if ( $title && $content ) {
 				$out[]=array(
 					'title'=>$title,
 					'content'=>$content,
@@ -156,7 +156,9 @@ class Wb_Custom_Product_Tabs_For_Woocommerce_Admin {
 					'position'=>$position,
 					'nickname'=>$nickname,
 				);
-			}			
+			} else {
+				break;
+			}
 		}
 		
 		return $out;
@@ -172,8 +174,13 @@ class Wb_Custom_Product_Tabs_For_Woocommerce_Admin {
 		{
 			return;
 		}
+			
 		$product=wc_get_product($post_id);
-		$product->update_meta_data('wb_custom_tabs', $this->sanitize_tab_input($_POST['wb_tab']));
+		$sanitized_tab_data = $this->sanitize_tab_input();
+
+		// Now sanitize the tab data explicitly before updating the meta
+		$product->update_meta_data( 'wb_custom_tabs', $sanitized_tab_data );
+
         $product->save();
 	}
 
@@ -243,10 +250,10 @@ class Wb_Custom_Product_Tabs_For_Woocommerce_Admin {
 	{
 		if(array_key_exists('wb_tab_meta_box', $_POST))
 		{
-			$tab_position=absint($_POST['wb_tab_tab_position']);
+			$tab_position=(int) isset( $_POST['wb_tab_tab_position'] ) ? sanitize_text_field( wp_unslash( $_POST['wb_tab_tab_position'] ) ) : 0;
 			update_post_meta($post_id, '_wb_tab_position', $tab_position);
 
-			$tab_nickname=sanitize_text_field($_POST['wb_tab_tab_nickname']);
+			$tab_nickname=isset( $_POST['wb_tab_tab_nickname'] ) ? sanitize_text_field( wp_unslash( $_POST['wb_tab_tab_nickname'] ) ) : '';
 			update_post_meta($post_id, '_wb_tab_nickname', $tab_nickname);
 		}
 	}
@@ -318,7 +325,7 @@ class Wb_Custom_Product_Tabs_For_Woocommerce_Admin {
 	{
 		if('wb_tab_nickname'==$column)
 		{
-			echo Wb_Custom_Product_Tabs_For_Woocommerce::_get_global_tab_nickname($post_id);
+			echo esc_html( Wb_Custom_Product_Tabs_For_Woocommerce::_get_global_tab_nickname( $post_id ) );
 		}
 	}
 
@@ -411,11 +418,13 @@ class Wb_Custom_Product_Tabs_For_Woocommerce_Admin {
 	 */
 	public static function is_a_post_type_page($post_type)
 	{
-		$file_name = pathinfo($_SERVER['SCRIPT_NAME'], PATHINFO_BASENAME);
-		if('post-new.php' === $file_name && isset($_GET['post_type']) && $post_type === sanitize_text_field($_GET['post_type']))
+		$file_name = isset( $_SERVER['SCRIPT_NAME'] ) ? pathinfo( sanitize_text_field(wp_unslash($_SERVER['SCRIPT_NAME'])), PATHINFO_BASENAME) : '';
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		if('post-new.php' === $file_name && isset($_GET['post_type']) && $post_type === sanitize_text_field(wp_unslash($_GET['post_type'])))
 		{
 			return true;
 
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
 		}elseif('post.php' === $file_name && isset($_GET['post']) && 0 < absint($_GET['post']) && $post_type === get_post_type(absint($_GET['post'])))
 		{
 			return true;
@@ -434,17 +443,9 @@ class Wb_Custom_Product_Tabs_For_Woocommerce_Admin {
 	{
 		if(self::is_wb_tab_page() || 'wb_tab_editor' === $editor_id)
 		{
-			$img = '<span class="dashicons dashicons-youtube" style="margin-top:5px;"></span> ';
-			$id_attribute = ' id="' . $editor_id . '-wb_cptb-embed-youtube"';
-
-			printf(
-				'<button type="button"%s class="button wb_cptb-embed-youtube" data-editor="%s">%s</button>',
-				$id_attribute,
-				esc_attr($editor_id),
-				$img . __('Embed YouTube', 'wb-custom-product-tabs-for-woocommerce')
-			);
-
-			
+			?>
+			<button type="button" id="<?php echo esc_attr( $editor_id . '-wb_cptb-embed-youtube' );?>" class="button wb_cptb-embed-youtube" data-editor="<?php echo esc_attr( $editor_id ); ?>"><span class="dashicons dashicons-youtube" style="margin-top:5px;"></span> <?php esc_html_e( 'Embed YouTube', 'wb-custom-product-tabs-for-woocommerce' );?></button>			
+			<?php	
 		}
 	}
 
@@ -464,7 +465,7 @@ class Wb_Custom_Product_Tabs_For_Woocommerce_Admin {
 				<div class="wb_tab_popup_hd">		
 					<span class="wb_tab_popup_hd_txt">
 						<span class="dashicons dashicons-youtube"></span>
-						<?php _e('Embed YouTube', 'wb-custom-product-tabs-for-woocommerce'); ?>
+						<?php esc_html_e('Embed YouTube', 'wb-custom-product-tabs-for-woocommerce'); ?>
 					</span>
 					<span class="wb_tab_popup_close" title="Close">
 						<span class="dashicons dashicons-dismiss"></span>
@@ -473,24 +474,24 @@ class Wb_Custom_Product_Tabs_For_Woocommerce_Admin {
 				<div class="wb_tab_popup_content">
 					<div class="wb_tab_panel_frmgrp">
 						<label>
-							<?php _e('YouTube URL/Video ID', 'wb-custom-product-tabs-for-woocommerce'); ?>		
+							<?php esc_html_e('YouTube URL/Video ID', 'wb-custom-product-tabs-for-woocommerce'); ?>		
 						</label>
 						<input type="text" name="wb_cptb_youtube_url" class="wb_tabpanel_txt" placeholder="<?php esc_attr_e('YouTube URL/Video ID', 'wb-custom-product-tabs-for-woocommerce'); ?>" value="" style="width:100%;">
 						<div class="wb_tab_er"></div>
 					</div>
 					<div class="wb_tab_panel_frmgrp" style="width:48%;">
-						<label><?php _e('Width', 'wb-custom-product-tabs-for-woocommerce'); ?></label>
+						<label><?php esc_html_e('Width', 'wb-custom-product-tabs-for-woocommerce'); ?></label>
 						<input type="number" name="wb_cptb_youtube_width" class="wb_tabpanel_txt" value="560" style="width:100%;" placeholder="<?php esc_attr_e('Default 560', 'wb-custom-product-tabs-for-woocommerce');?>" step="1" min="50">
 						<div class="wb_tab_er"></div>
 					</div>
 					<div class="wb_tab_panel_frmgrp" style="width:48%; float:right;">
-						<label><?php _e('Height', 'wb-custom-product-tabs-for-woocommerce'); ?></label>
+						<label><?php esc_html_e('Height', 'wb-custom-product-tabs-for-woocommerce'); ?></label>
 						<input type="number" name="wb_cptb_youtube_height" class="wb_tabpanel_txt" value="315" style="width:100%;" placeholder="<?php esc_attr_e('Default 315', 'wb-custom-product-tabs-for-woocommerce');?>" step="1" min="50">
 						<div class="wb_tab_er"></div>
 					</div>
 					<div class="wb_tab_panel_frmgrp" style="text-align:right;">
-						<button class="button button-primary wb_tab_done_btn wb_cptb_youtube_insert_btn" type="button"><?php _e('Insert', 'wb-custom-product-tabs-for-woocommerce'); ?></button>
-						<button class="button button-secondary wb_tab_cancel_btn" type="button"><?php _e('Cancel', 'wb-custom-product-tabs-for-woocommerce'); ?></button>
+						<button class="button button-primary wb_tab_done_btn wb_cptb_youtube_insert_btn" type="button"><?php esc_html_e('Insert', 'wb-custom-product-tabs-for-woocommerce'); ?></button>
+						<button class="button button-secondary wb_tab_cancel_btn" type="button"><?php esc_html_e('Cancel', 'wb-custom-product-tabs-for-woocommerce'); ?></button>
 					</div>
 				</div>
 			</div>
@@ -556,10 +557,18 @@ class Wb_Custom_Product_Tabs_For_Woocommerce_Admin {
             return;
         }
 
+        /* translators: 1: opening anchor tag, 2: closing anchor tag, 3: star rating, 4: opening bold tag, 5: closing bold tag */
+		$msg = sprintf( __('Click %1$s here %2$s to rate us %3$s, If you like the %4$s Custom product tabs %5$s plugin', 'wb-custom-product-tabs-for-woocommerce'),
+		    '<a href="https://wordpress.org/support/plugin/wb-custom-product-tabs-for-woocommerce/reviews/?rate=5#new-post" target="_blank" style="text-decoration:none; font-weight:bold;">',
+		    '</a>',
+		    '⭐️⭐️⭐️⭐️⭐️',
+		    '<b>',
+		    '</b>'
+		);
         ?>
         <script type="text/javascript"> 
             jQuery(document).ready( function() {
-            	jQuery('.wp-list-table').after('<div style="display:inline-block; width:100%; box-shadow:2px 1px 2px 0px #e2d5d5; margin-top:15px;padding: 10px;box-sizing: border-box;margin-bottom: 15px; border-left: solid 4px blueviolet; background:#e1eef6;"><?php echo wp_kses_post(sprintf(__('Click %s here %s to rate us %s, If you like the %s Custom product tabs %s plugin', 'wb-custom-product-tabs-for-woocommerce'), '<a href="https://wordpress.org/support/plugin/wb-custom-product-tabs-for-woocommerce/reviews/?rate=5#new-post" target="_blank" style="text-decoration:none; font-weight:bold;">', '</a>', '⭐️⭐️⭐️⭐️⭐️', '<b>', '</b>')); ?></div>');
+            	jQuery('.wp-list-table').after('<div style="display:inline-block; width:100%; box-shadow:2px 1px 2px 0px #e2d5d5; margin-top:15px;padding: 10px;box-sizing: border-box;margin-bottom: 15px; border-left: solid 4px blueviolet; background:#e1eef6;"><?php echo wp_kses_post( $msg ); ?></div>');
 
             	jQuery('.page-title-action').after('<a style="margin-left:10px; font-weight:bold;" href="https://www.buymeacoffee.com/webbuilder143" target="_blank"><?php esc_html_e('Donate to support the Custom Product Tabs plugin.', 'wb-custom-product-tabs-for-woocommerce');?></a>');
             });

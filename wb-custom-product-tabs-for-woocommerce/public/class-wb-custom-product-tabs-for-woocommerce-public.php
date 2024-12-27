@@ -105,7 +105,7 @@ class Wb_Custom_Product_Tabs_For_Woocommerce_Public {
 				$tab_data=apply_filters('wb_cptb_alter_tab_content', $tab_data, $product);
 				$tab_key='wb_cptb_'.$wb_inc;			
 				$tabs[$tab_key]=array(
-					'title'=>trim($tab_data['title']),
+					'title'=> trim($tab_data['title']),
 					'priority'=>$tab_data['position'],
 					'callback'=> array($this, 'set_tab_content'),
 					'content'=>$tab_data['content']
@@ -137,12 +137,12 @@ class Wb_Custom_Product_Tabs_For_Woocommerce_Public {
 		if(!$hide_heading)
 		{
 		?>
-			<h2 class="wb_cptb_title"><?php esc_html_e($tab_data['title'], 'wb-custom-product-tabs-for-woocommerce');?></h2>
+			<h2 class="wb_cptb_title"><?php echo esc_html( $tab_data['title'] ); ?></h2>
 		<?php
 		}
 		?>
 		<div class="wb_cptb_content">
-			<?php echo do_shortcode( wp_kses_post( wpautop( __(stripslashes($tab_data['content'] ), 'wb-custom-product-tabs-for-woocommerce') ) ) );?>
+			<?php echo do_shortcode( wp_kses_post( wpautop( stripslashes( $tab_data['content'] ) ) ) );?>
 		</div>
 		<?php
 	}
