@@ -81,7 +81,8 @@ class Wb_Custom_Product_Tabs_For_Woocommerce_Admin {
 				'invalid_video_id'=>__('Please enter valid YouTube video ID', 'wb-custom-product-tabs-for-woocommerce'),
 				'inserting'=>__('Inserting...', 'wb-custom-product-tabs-for-woocommerce'),
 				'insert'=>__('Insert', 'wb-custom-product-tabs-for-woocommerce'),
-			)		
+			),
+			'default_tab_position'=> Wb_Custom_Product_Tabs_For_Woocommerce::get_default_tab_position(),	
 		));
 	}
 
@@ -276,8 +277,9 @@ class Wb_Custom_Product_Tabs_For_Woocommerce_Admin {
 	}
 
 	/**
-	 *	@since 1.1.0
-	 *	Render HTML for tab other info meta box
+	 * 	Render HTML for tab other info meta box.
+	 * 
+	 * 	@since 1.1.0
 	 */
 	public function _tab_other_info_meta_box_html( $post, $box)
 	{
@@ -294,7 +296,11 @@ class Wb_Custom_Product_Tabs_For_Woocommerce_Admin {
 	{
 		$links[]='<a href="'.esc_url( admin_url('edit.php?post_type='.WB_TAB_POST_TYPE) ).'">'.__('Global Product tabs', 'wb-custom-product-tabs-for-woocommerce').'</a>';
 
-		$links[]='<a href="https://www.buymeacoffee.com/webbuilder143" target="_blank" style="color:#06bb06; font-weight:700;">'.__('Donate', 'wb-custom-product-tabs-for-woocommerce').'</a>';
+		$links[]='<a href="'.esc_url( admin_url('options-general.php?page=wb-product-tab-settings') ).'">'.__('Tab settings', 'wb-custom-product-tabs-for-woocommerce').'</a>';
+
+		$links[]='<a href="'.esc_url( admin_url('options-general.php?page=wb-product-tab-settings&wb_cptb_tab=help') ).'">'.__('Help', 'wb-custom-product-tabs-for-woocommerce').'</a>';
+
+		$links[]='<a href="https://webbuilder143.com/support-our-work/?utm_source=plugin&utm_medium=plugins-page&utm_campaign=links&utm_id=tabs-plugin&utm_content=donate" target="_blank" style="color:#06bb06; font-weight:700;">'.__('Donate', 'wb-custom-product-tabs-for-woocommerce').'</a>';
 		return $links;
 	}
 
@@ -570,7 +576,7 @@ class Wb_Custom_Product_Tabs_For_Woocommerce_Admin {
             jQuery(document).ready( function() {
             	jQuery('.wp-list-table').after('<div style="display:inline-block; width:100%; box-shadow:2px 1px 2px 0px #e2d5d5; margin-top:15px;padding: 10px;box-sizing: border-box;margin-bottom: 15px; border-left: solid 4px blueviolet; background:#e1eef6;"><?php echo wp_kses_post( $msg ); ?></div>');
 
-            	jQuery('.page-title-action').after('<a style="margin-left:10px; font-weight:bold;" href="https://www.buymeacoffee.com/webbuilder143" target="_blank"><?php esc_html_e('Donate to support the Custom Product Tabs plugin.', 'wb-custom-product-tabs-for-woocommerce');?></a>');
+            	jQuery('.page-title-action').after('<a style="margin-left:10px; font-weight:bold; background-image: linear-gradient(75deg, #db3ef6, #400cb4); color: #fff; padding:5px 10px; border:solid 1px #d73df4; border-radius:5px; top:-3px; display: inline-block; position: relative; text-decoration:none;" href="https://webbuilder143.com/support-our-work/?utm_source=plugin&utm_medium=global-tabs&utm_campaign=add-new&utm_id=tabs-plugin&utm_content=donate" target="_blank"><?php esc_html_e('Donate to support the Custom Product Tabs plugin.', 'wb-custom-product-tabs-for-woocommerce');?></a>');
             });
         </script>
         <?php
@@ -838,5 +844,51 @@ class Wb_Custom_Product_Tabs_For_Woocommerce_Admin {
 		}
 
 		return $post_types;
-	} 
+	}
+
+
+	/**
+	 * 	Register plugin settings.
+	 * 
+	 * 	@since 1.3.0
+	 */
+	public function register_settings() {
+		register_setting('wb_cptb_custom_tab_settings_group', 'wb_cptb_default_tab_position', [
+	        'sanitize_callback' => 'absint',
+	    ]);
+	    register_setting('wb_cptb_custom_tab_settings_group', 'wb_cptb_hide_tab_heading', [
+	        'sanitize_callback' => 'absint',
+	    ]);
+	    register_setting('wb_cptb_custom_tab_settings_group', 'wb_cptb_global_tabs_behavior', [
+	        'sanitize_callback' => 'absint',
+	    ]);
+	}
+
+	/**
+	 * 	Add settings page.
+	 * 
+	 * 	@since 1.3.0
+	 */
+	public function settings_menu() {
+		add_options_page(
+	        __( 'Product Tab Settings', 'wb-custom-product-tabs-for-woocommerce' ),   // Page title.
+	        __( 'Product Tab Settings', 'wb-custom-product-tabs-for-woocommerce' ),   // Menu title.	
+	        'manage_options',         // Capability.
+	        'wb-product-tab-settings',   // Menu slug.
+	        array( $this, 'settings_page' ) // Callback function.
+	    );
+	}
+
+	/**
+	 * 	Settings page.
+	 * 
+	 * 	@since 1.3.0
+	 */
+	public function settings_page() {
+
+		$tab = isset( $_GET['wb_cptb_tab'] ) ? sanitize_text_field( wp_unslash( $_GET['wb_cptb_tab'] ) ) : 'general';
+		$page_url = admin_url('options-general.php?page=wb-product-tab-settings');
+
+		include_once WB_TAB_ROOT_PATH . 'admin/views/settings.php';
+	}
 }

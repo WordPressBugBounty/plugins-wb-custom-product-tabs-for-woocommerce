@@ -50,6 +50,8 @@
 					wb_tab.process_tabs();
 
 					new_elm.find('.wb_tab_title_input').val('');
+					new_elm.find('.wb_tab_nickname_input').val('');
+					new_elm.find('.wb_tab_position_input').val(wb_custom_tabs_params.default_tab_position);
 					new_elm.find('.wb_tab_panel_edit').trigger('click'); /* open the edit screen */
 					setTimeout(function(){
 						wb_tab.new_tab_edit = true;
@@ -244,6 +246,7 @@
 				temp_dom.find('.wb_tab_panel_hd_txt').html(wb_custom_tabs_params.msgs.untitled);
 				temp_dom.find('.wb_tabpanel_txt:not(.wb_tab_nickname_input)').attr('value', wb_custom_tabs_params.msgs.untitled);
 				temp_dom.find('.wb_tabpanel_txtarea').html('');
+				temp_dom.find('.wb_tab_nickname_input').val('');
 				temp_dom.removeAttr('data-disabled');
 				this.tab_single_html=temp_dom.html();
 			},

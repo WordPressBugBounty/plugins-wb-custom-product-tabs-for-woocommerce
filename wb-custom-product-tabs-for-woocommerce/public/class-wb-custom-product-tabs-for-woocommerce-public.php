@@ -123,6 +123,8 @@ class Wb_Custom_Product_Tabs_For_Woocommerce_Public {
 	 */
 	public function set_tab_content($key, $tab_data)
 	{
+		$hide_heading = Wb_Custom_Product_Tabs_For_Woocommerce::get_tab_heading_visibility();
+	
 		/**
 		 * 	Hide tab heading in the tab content
 		 * 	Default: false
@@ -132,7 +134,7 @@ class Wb_Custom_Product_Tabs_For_Woocommerce_Public {
 		 * 	@param bool  		True for hidden
 		 * 	@param string|int  	Tab id/key
 		 */
-		$hide_heading = apply_filters('wb_cptb_hide_heading_in_tab_content', false, $key);
+		$hide_heading = apply_filters('wb_cptb_hide_heading_in_tab_content', $hide_heading, $key);
 		
 		if(!$hide_heading)
 		{

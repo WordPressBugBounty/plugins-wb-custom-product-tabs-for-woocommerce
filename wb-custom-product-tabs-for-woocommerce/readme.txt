@@ -1,39 +1,36 @@
 === Custom Product tabs for WooCommerce ===
 Contributors: webbuilder143
-Donate link: https://www.buymeacoffee.com/webbuilder143
+Donate link: https://webbuilder143.com/support-our-work/?utm_source=wordpressorg&utm_medium=readme&utm_campaign=donate-link&utm_id=tabs-plugin&utm_content=donate
 Tags: product tabs, tab manager, woocommerce custom tabs, tabs for woocommerce, tabs plugin
 Requires at least: 3.5.0
 Tested up to: 6.7
 Requires PHP: 5.6
-Stable tag: 1.2.5
+Stable tag: 1.3.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Add unlimited custom tabs to WooCommerce products. Attach the newly created tab to multiple products instantly.  
+Add unlimited custom tabs to WooCommerce products and assign them globally by category, tag, or brand. Supports sorting, YouTube embeds, and shortcodes.  
 
 == Description ==
 
-Do you require a customized tab for your WooCommerce product? With the Custom Product Tab plugin, you can effortlessly add unlimited number of tabs into your WooCommerce products. This extension enables you to include any custom content onto your product page.
+Need a customized tab for your WooCommerce products? The Custom Product Tabs for WooCommerce plugin lets you effortlessly add an unlimited number of tabs to your product pages, helping you display additional product information in a structured way.
 
-By using this WooCommerce extension, you have the ability to create global tabs and assign them to products based on specific categories or tags.
+This plugin is perfect for store owners who want to provide customers with detailed product information in an organized and user-friendly manner.
 
-The sortable product tabs feature allows you to personalize your WooCommerce product page to your liking.
-
-With custom tabs, you can add extra product images, product descriptions, embed youtube videos, and more. This plugin also supports WordPress shortcodes.
-
+Enhance your WooCommerce product pages today with Custom Product Tabs for WooCommerce!
 
 
 == Features ==
 
-1. Add an unlimited number of tabs to each individual product.
-2. Global tabs: Create reusable tabs and apply them to multiple products with a single click.
-3. Flexible tab positioning options to arrange the order of tabs.
-4. User-friendly interface for easy navigation and management.
-5. Utilize the WP editor to effortlessly incorporate images, HTML, and shortcodes into product tab content.
-6. Developer-friendly filters available to modify tab content and positioning.
-7. Compatible with translation tools for multilingual support.
-8. Assign nicknames to tabs for easier identification in the backend and when working with code snippets.
-9. Option to embed YouTube videos directly into product tabs.
+✅ Unlimited Custom Tabs – Add as many custom tabs as needed for your WooCommerce products.
+✅ Global Tabs – Create tabs that can be assigned to multiple products based on categories, tags, and WooCommerce brands.
+✅ Brand-Specific Tabs – Fully supports WooCommerce's default brand functionality and third-party brand plugins like [Perfect Brands for WooCommerce](https://wordpress.org/plugins/perfect-woocommerce-brands/).
+✅ YouTube Embed Support – Easily embed YouTube videos directly within product tabs.
+✅ Sortable Tabs – Organize tabs with a custom order input field for better content arrangement.
+✅ Multi-Language Support – Compatible with WPML and Polylang for multilingual stores.
+✅ Rich Content Support – Add extra product images, detailed descriptions, videos, FAQs, and more.
+✅ Shortcode Compatibility – Use WordPress shortcodes to insert dynamic content into tabs.
+✅ Developer-Friendly Hooks – Includes multiple hooks for customization and integration with third-party plugins.
 
 
 
@@ -56,8 +53,21 @@ There is no restriction on the number of tabs you can add. You can include multi
 = What are global tabs? =
 Global tabs are reusable tabs that can be assigned to multiple products based on their category or tags.
 
+= Why is my global tab not displaying on the front end? =
+Ensure the global tab is correctly assigned to products via categories, tags, or brands. Additionally, you can modify the default behavior of global tabs in the plugin settings. The "Global Tab Behavior" option allows you to display global tabs on all products, even without assigning them to specific categories, tags, or brands.
+
+= Where are the plugin settings located? =
+You can find the "Product Tab Settings" menu under the "Settings" menu in the WordPress admin dashboard.
+
+= How can I display global tabs on all products without assigning them to any categories, tags, or brands? =
+To display global tabs on all products, visit the plugin settings and enable the "Global Tab Behavior" option. This will allow you to show global tabs across all products without needing to assign them to specific categories, tags, or brands.
+
+= I am using a third-party brands plugin. Can I still assign tabs to products based on brands =
+Yes, by default, our plugin supports WooCommerce's default brands. It also supports the [Perfect Brands for WooCommerce](https://wordpress.org/plugins/perfect-woocommerce-brands/) plugin. Additionally, you can add support for your custom brands plugin using the filter hook: wb_cptb_thirdparty_brand_taxonomies. If you need help adding support for your brand plugin, please reach out to us via the support forum.
+
 = Can I arrange these tabs? =
 Yes, you can arrange both product-specific tabs and global tabs according to your preference.
+For a detailed guide on positioning product tabs, please visit this article: [How to Arrange WooCommerce Custom Product Tabs](https://webbuilder143.com/how-to-arrange-woocommerce-custom-product-tabs/?utm_source=wordpressorg&utm_medium=readme&utm_campaign=faq&utm_content=positioning).
 
 = Is there any filter available to edit tabs? =
 Yes, there are filters available to modify tab content and position. Developers can utilize these filters to programmatically manage the tabs.
@@ -68,14 +78,24 @@ Yes, you have the option to delete the tabs as needed.
 = How can I add YouTube videos to the tab content? =
 To add YouTube videos to the tab content, simply use the YouTube embed button located just above the tab content editor.
 
+= How do I translate tabs using Polylang? =
+For a detailed guide on translating WooCommerce product tabs using Polylang, please visit this article: [How to translate tabs using Polylang](https://webbuilder143.com/how-to-translate-woocommerce-product-tabs-with-polylang/?utm_source=wordpressorg&utm_medium=readme&utm_campaign=faq&utm_content=polylang).
+
 == Screenshots ==
 
 1. Edit window for product specific tab
 2. Global tabs and product-specific tabs on the product edit page
 3. Global product tabs
 4. Edit window for global product tab
+5. General settings
+6. Help & FAQs
 
 == Changelog ==
+
+= 1.3.0 =
+* Tested with WC 9.6
+* [Add] General settings page added. 
+* [Add] Help and FAQ page added. 
 
 = 1.2.5 =
 * Tested with WC 9.5
@@ -220,6 +240,7 @@ To add YouTube videos to the tab content, simply use the YouTube embed button lo
 
 == Upgrade Notice ==
 
-= 1.2.5 =
-* Tested with WC 9.5
-* [Fix] Security vulnerability fixed.
+= 1.3.0 =
+* Tested with WC 9.6
+* [Add] General settings page added. 
+* [Add] Help and FAQ page added. 

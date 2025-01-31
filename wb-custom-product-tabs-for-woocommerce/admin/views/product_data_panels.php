@@ -24,7 +24,7 @@ if (!defined('ABSPATH')) {
 			<label><?php esc_html_e('Tab position', 'wb-custom-product-tabs-for-woocommerce');?><span class="woocommerce-help-tip" data-tip="<?php esc_attr_e('Tab position', 'wb-custom-product-tabs-for-woocommerce'); ?>"></span></label>
 			<input type="number" min="0" step="1" name="wb_tab_position" class="wb_tabpanel_txt wb_tab_position_input" placeholder="<?php esc_attr_e('Tab position', 'wb-custom-product-tabs-for-woocommerce'); ?>" value="" style="float:left; width:100px;">			
 			<div class="wb_tabpanel_hlp" style="margin-top:10px; margin-left:15px;">
-				<a href="https://webbuilder143.com/how-to-arrange-woocommerce-custom-product-tabs/" target="_blank"><?php esc_html_e('Know more', 'wb-custom-product-tabs-for-woocommerce'); ?> <span class="dashicons dashicons-external" style="text-decoration:none;"></span></a>
+				<a href="https://webbuilder143.com/how-to-arrange-woocommerce-custom-product-tabs/?utm_source=plugin&utm_medium=product-edit&utm_campaign=tab-position&utm_content=positioning" target="_blank"><?php esc_html_e('Know more', 'wb-custom-product-tabs-for-woocommerce'); ?> <span class="dashicons dashicons-external" style="text-decoration:none;"></span></a>
 			</div>
 			<div class="wb_tab_er"></div>
 		</div>
@@ -32,10 +32,10 @@ if (!defined('ABSPATH')) {
 			<label><?php esc_html_e('Tab content', 'wb-custom-product-tabs-for-woocommerce');?><span class="woocommerce-help-tip" data-tip="<?php esc_attr_e('Content for tab', 'wb-custom-product-tabs-for-woocommerce'); ?>"></span></label>
 			<?php wp_editor('','wb_tab_editor',array(
 					'editor_class'=>'wb_tab_rte',
-					'editor_height'=>150,
-					'textarea_rows'=>4,
+					'editor_height'=>220,
+					'textarea_rows'=>7,
 					'tinymce' => array(
-				        'height' =>150,
+				        'height' =>220,
 				    )
 				) 
 			); 
@@ -58,7 +58,16 @@ if (!defined('ABSPATH')) {
 	<div class="options_group">
 		<div class="wb_tab_main_hd">
 			<span class="wb_tab_main_hd_inner"><?php esc_html_e('Custom tabs', 'wb-custom-product-tabs-for-woocommerce'); ?></span>
-			<p class="wb_tab_addnew_btn_container"><button class="button button-primary wb_tab_addnew_btn" type="button"><span class="dashicons dashicons-plus-alt" style="margin-top:7px; font-size:14px;"></span> <?php esc_html_e('Add new tab', 'wb-custom-product-tabs-for-woocommerce');?></button></p>
+			<p class="wb_tab_addnew_btn_container">
+				<a class="button button-secondary" target="_blank" href="<?php echo esc_url( admin_url('options-general.php?page=wb-product-tab-settings&wb_cptb_tab=general')); ?>"> 
+					<span class="dashicons dashicons-admin-generic" style="margin-top:7px; font-size:14px;"></span> 
+					<?php esc_html_e('Tab settings', 'wb-custom-product-tabs-for-woocommerce'); ?>
+				</a>
+				<a class="button button-secondary" target="_blank" href="<?php echo esc_url( admin_url('options-general.php?page=wb-product-tab-settings&wb_cptb_tab=help')); ?>">
+					<span class="dashicons dashicons-sos" style="margin-top:7px; font-size:14px;"></span>  
+					<?php esc_html_e('Help & FAQ', 'wb-custom-product-tabs-for-woocommerce'); ?>
+				</a>
+				<button class="button button-primary wb_tab_addnew_btn" type="button"><span class="dashicons dashicons-plus-alt" style="margin-top:7px; font-size:14px;"></span> <?php esc_html_e('Add new tab', 'wb-custom-product-tabs-for-woocommerce');?></button></p>
 		</div>
 		<div class="wb_tab_main_inner">
 			<?php

@@ -13,6 +13,6 @@ if (!defined('ABSPATH')) {
 	<label class="wb_tab_form_label"><?php esc_html_e('Tab position', 'wb-custom-product-tabs-for-woocommerce'); ?></label>
 	<input type="text" name="wb_tab_tab_position" value="<?php echo esc_attr($tab_position);?>">
 	<div style="margin-top:10px; display:inline-block;">
-		<a href="https://webbuilder143.com/how-to-arrange-woocommerce-custom-product-tabs/" target="_blank"><?php esc_html_e('Know more', 'wb-custom-product-tabs-for-woocommerce'); ?> <span class="dashicons dashicons-external" style="text-decoration:none;"></span></a>
+		<a href="https://webbuilder143.com/how-to-arrange-woocommerce-custom-product-tabs/?utm_source=plugin&utm_medium=global-tab&utm_campaign=tab-position&utm_content=positioning" target="_blank"><?php esc_html_e('Know more', 'wb-custom-product-tabs-for-woocommerce'); ?> <span class="dashicons dashicons-external" style="text-decoration:none;"></span></a>
 	</div>
 </div>

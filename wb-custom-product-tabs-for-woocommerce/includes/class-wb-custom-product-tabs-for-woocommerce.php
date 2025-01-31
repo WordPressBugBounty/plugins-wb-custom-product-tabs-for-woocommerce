@@ -70,7 +70,7 @@ class Wb_Custom_Product_Tabs_For_Woocommerce {
 		if ( defined( 'WB_CUSTOM_PRODUCT_TABS_FOR_WOOCOMMERCE_VERSION' ) ) {
 			$this->version = WB_CUSTOM_PRODUCT_TABS_FOR_WOOCOMMERCE_VERSION;
 		} else {
-			$this->version = '1.2.5';
+			$this->version = '1.3.0';
 		}
 		$this->plugin_name = 'wb-custom-product-tabs-for-woocommerce';
 
@@ -252,6 +252,21 @@ class Wb_Custom_Product_Tabs_For_Woocommerce {
 		* @since 1.2.4
 		*/
 		$this->loader->add_filter( 'pll_get_post_types', $plugin_admin, 'add_global_tabs_to_pll_post_type_list', 11 );
+
+
+		/**
+		* Register settings.
+		* 	
+		* @since 1.3.0
+		*/
+		$this->loader->add_filter( 'admin_init', $plugin_admin, 'register_settings', 11 );
+
+		/**
+		* General settings menu.
+		* 	
+		* @since 1.3.0
+		*/
+		$this->loader->add_filter( 'admin_menu', $plugin_admin, 'settings_menu', 11 );
 	}
 
 	/**
@@ -390,6 +405,18 @@ class Wb_Custom_Product_Tabs_For_Woocommerce {
 	        ),
 	    );
 
+		$tax_query_not_exists = array(
+			'relation'=>'AND',
+	        array(
+	            'taxonomy'=>'product_cat',
+	            'operator' => 'NOT EXISTS',
+	        ),
+	        array(
+	            'taxonomy'=>'product_tag',
+	            'operator' => 'NOT EXISTS',
+	        ),
+	    );
+
 
 		// Add compatibility for thirdparty brand plugins.
 	    $brand_taxonamies = self::_get_thirdparty_brand_taxonamies();
@@ -408,6 +435,13 @@ class Wb_Custom_Product_Tabs_For_Woocommerce {
 		            'terms' 	=> $brand_id_arr,
 		        );
 		    }
+			
+			if ( taxonomy_exists( $brand_taxonamy ) ) {
+				$tax_query_not_exists[] = array(
+					'taxonomy' 	=> $brand_taxonamy,
+					'operator' 	=> 'NOT EXISTS',
+				);
+			}
 	    }
 	    
 
@@ -418,8 +452,7 @@ class Wb_Custom_Product_Tabs_For_Woocommerce {
 			)
 		 );
 
-		if($query->have_posts())
-		{
+		if ( $query->have_posts() ) {
 			while ( $query->have_posts() ) {
 				$query->the_post();
 				$post_id=get_the_ID();
@@ -428,6 +461,28 @@ class Wb_Custom_Product_Tabs_For_Woocommerce {
 				$wb_tabs[]=array('title'=>get_the_title(), 'content'=>get_the_content(), 'tab_type'=>'global', 'position'=>$tab_position, 'nickname'=>$tab_nickname, 'tab_id'=>$post_id);
 			}
 		}
+
+		if ( ! self::is_hide_not_assigned_global_tabs() ) {
+			
+			// Get global tabs not assigned with any category, tags, brands, etc.
+			$query_not_exists = new WP_Query(
+				array(
+					'post_type' => WB_TAB_POST_TYPE,
+					'tax_query' => $tax_query_not_exists, // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query
+				)
+			);
+
+			if ( $query_not_exists->have_posts() ) {
+				while ( $query_not_exists->have_posts() ) {
+					$query_not_exists->the_post();
+					$post_id=get_the_ID();
+					$tab_position=self::_get_global_tab_position($post_id);		
+					$tab_nickname=self::_get_global_tab_nickname($post_id);		
+					$wb_tabs[]=array('title'=>get_the_title(), 'content'=>get_the_content(), 'tab_type'=>'global', 'position'=>$tab_position, 'nickname'=>$tab_nickname, 'tab_id'=>$post_id);
+				}
+			}
+		}
+
 		wp_reset_postdata();
 
 		/* 
@@ -442,10 +497,16 @@ class Wb_Custom_Product_Tabs_For_Woocommerce {
 		return $wb_tabs;
 	}
 
+	/**
+	 * 	Get global tab position.
+	 * 
+	 * 	@param int $id Tab ID.
+	 * 	@return int Tab position.
+	 */
 	public static function _get_global_tab_position($id)
 	{
 		$tab_position=get_post_meta($id, '_wb_tab_position', true);
-		return absint($tab_position==="" ? 20 : $tab_position);
+		return absint( "" === $tab_position ? self::get_default_tab_position() : $tab_position );
 	}
 
 	public static function _get_global_tab_nickname($id)
@@ -498,5 +559,33 @@ class Wb_Custom_Product_Tabs_For_Woocommerce {
 	}
 
 
-	//public function migrate_old_
+	/**
+	 * 	Default tab position.
+	 * 	
+	 * 	@since 1.3.0
+	 * 	@return int Default tab position.
+	 */
+	public static function get_default_tab_position() {
+		return get_option('wb_cptb_default_tab_position', 1);
+	}
+
+	/**
+	 * 	Get tab heading visibility.
+	 * 
+	 * 	@since 1.3.0
+	 * 	@return bool Tab heading visibility.
+	 */
+	public static function get_tab_heading_visibility() {
+		return wc_string_to_bool( get_option('wb_cptb_hide_tab_heading', 0) );
+	}
+
+	/**
+	 * 	Is hide global tabs if not assigned with any category, tags, brands, etc.
+	 * 
+	 * 	@since 1.3.0
+	 * 	@return bool True for hide from all products if not assigned with any category, tags, brands, etc.	
+	 */
+	public static function is_hide_not_assigned_global_tabs() {
+		return wc_string_to_bool( get_option('wb_cptb_global_tabs_behavior', 1) );
+	}
 }
