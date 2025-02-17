@@ -62,7 +62,7 @@ if (!defined('ABSPATH')) {
                     <label>
                         <input type="checkbox" name="wb_cptb_global_tabs_behavior" value="1" 
                             <?php checked(get_option('wb_cptb_global_tabs_behavior', 1), 1); ?> />
-                        <?php esc_html_e('Hide from all products if not assigned with any category, tags, brands, etc.', 'wb-custom-product-tabs-for-woocommerce'); ?>
+                        <?php esc_html_e('Hide from all products if not assigned with any product, category, tags, brands, etc.', 'wb-custom-product-tabs-for-woocommerce'); ?>
                     </label>
                 </td>
             </tr>

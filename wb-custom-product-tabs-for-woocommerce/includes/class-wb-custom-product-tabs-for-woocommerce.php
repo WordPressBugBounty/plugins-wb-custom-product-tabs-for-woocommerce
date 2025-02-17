@@ -70,7 +70,7 @@ class Wb_Custom_Product_Tabs_For_Woocommerce {
 		if ( defined( 'WB_CUSTOM_PRODUCT_TABS_FOR_WOOCOMMERCE_VERSION' ) ) {
 			$this->version = WB_CUSTOM_PRODUCT_TABS_FOR_WOOCOMMERCE_VERSION;
 		} else {
-			$this->version = '1.3.0';
+			$this->version = '1.3.1';
 		}
 		$this->plugin_name = 'wb-custom-product-tabs-for-woocommerce';
 
@@ -384,6 +384,33 @@ class Wb_Custom_Product_Tabs_For_Woocommerce {
 		/* 
 		*	Taking global tabs 
 		*/
+
+		/* Taking global tabs assigned via products. */
+		$query = new WP_Query( array(
+	        'post_type' => WB_TAB_POST_TYPE,
+	        'meta_query' => array(
+	            array(
+	                'key' => '_wb_tab_products',
+	                'value' => esc_sql( "i:$product_id;" ),
+	                'compare' => 'LIKE'
+	            )
+	        )
+	    ));
+
+	    $tab_ids = array(); // This is to prevent duplicate tabs while executing the second query.
+
+	    if ( $query->have_posts() ) {
+			while ( $query->have_posts() ) {
+				$query->the_post();
+				$post_id = get_the_ID();
+				$tab_position = self::_get_global_tab_position( $post_id );		
+				$tab_nickname = self::_get_global_tab_nickname( $post_id );		
+				$wb_tabs[] = array('title'=>get_the_title(), 'content'=>get_the_content(), 'tab_type'=>'global', 'position'=>$tab_position, 'nickname'=>$tab_nickname, 'tab_id'=>$post_id);
+				$tab_ids[] = $post_id;
+			}
+		}
+
+
 		/* Taking categories */
 		$cat_id_arr=self::_get_product_category_ids($product_id);
 
@@ -455,10 +482,14 @@ class Wb_Custom_Product_Tabs_For_Woocommerce {
 		if ( $query->have_posts() ) {
 			while ( $query->have_posts() ) {
 				$query->the_post();
-				$post_id=get_the_ID();
-				$tab_position=self::_get_global_tab_position($post_id);		
-				$tab_nickname=self::_get_global_tab_nickname($post_id);		
-				$wb_tabs[]=array('title'=>get_the_title(), 'content'=>get_the_content(), 'tab_type'=>'global', 'position'=>$tab_position, 'nickname'=>$tab_nickname, 'tab_id'=>$post_id);
+				$post_id = get_the_ID();
+
+				if ( ! in_array( $post_id, $tab_ids ) ) { // Not already added.
+
+					$tab_position=self::_get_global_tab_position($post_id);		
+					$tab_nickname=self::_get_global_tab_nickname($post_id);		
+					$wb_tabs[]=array('title'=>get_the_title(), 'content'=>get_the_content(), 'tab_type'=>'global', 'position'=>$tab_position, 'nickname'=>$tab_nickname, 'tab_id'=>$post_id);
+				}
 			}
 		}
 
@@ -475,10 +506,15 @@ class Wb_Custom_Product_Tabs_For_Woocommerce {
 			if ( $query_not_exists->have_posts() ) {
 				while ( $query_not_exists->have_posts() ) {
 					$query_not_exists->the_post();
-					$post_id=get_the_ID();
-					$tab_position=self::_get_global_tab_position($post_id);		
-					$tab_nickname=self::_get_global_tab_nickname($post_id);		
-					$wb_tabs[]=array('title'=>get_the_title(), 'content'=>get_the_content(), 'tab_type'=>'global', 'position'=>$tab_position, 'nickname'=>$tab_nickname, 'tab_id'=>$post_id);
+					$post_id = get_the_ID();
+					
+					// Only add if the tab is not assigned to any product.
+					$tab_products = self::_get_global_tab_products( $post_id );
+					if ( empty( $tab_products ) ) {
+						$tab_position=self::_get_global_tab_position($post_id);		
+						$tab_nickname=self::_get_global_tab_nickname($post_id);		
+						$wb_tabs[]=array('title'=>get_the_title(), 'content'=>get_the_content(), 'tab_type'=>'global', 'position'=>$tab_position, 'nickname'=>$tab_nickname, 'tab_id'=>$post_id);
+					}		
 				}
 			}
 		}
@@ -587,5 +623,18 @@ class Wb_Custom_Product_Tabs_For_Woocommerce {
 	 */
 	public static function is_hide_not_assigned_global_tabs() {
 		return wc_string_to_bool( get_option('wb_cptb_global_tabs_behavior', 1) );
+	}
+
+
+	/**
+	 * 	Get global tab products.
+	 * 
+	 * 	@since  1.3.1
+	 * 	@param 	int 		$id 	Tab ID.
+	 * 	@return array 		Array of product ids associated with the tab.
+	 */
+	public static function _get_global_tab_products( $id ) {
+		$products = get_post_meta( $id, '_wb_tab_products', true );
+		return is_array( $products ) ? $products :  array();
 	}
 }

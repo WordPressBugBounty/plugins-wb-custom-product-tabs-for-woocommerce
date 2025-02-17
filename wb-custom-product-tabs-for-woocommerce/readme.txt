@@ -1,15 +1,15 @@
 === Custom Product tabs for WooCommerce ===
 Contributors: webbuilder143
 Donate link: https://webbuilder143.com/support-our-work/?utm_source=wordpressorg&utm_medium=readme&utm_campaign=donate-link&utm_id=tabs-plugin&utm_content=donate
-Tags: product tabs, tab manager, woocommerce custom tabs, tabs for woocommerce, tabs plugin
+Tags: product tabs, tab manager, woocommerce custom tabs, woocommerce product tabs, tabs plugin
 Requires at least: 3.5.0
 Tested up to: 6.7
 Requires PHP: 5.6
-Stable tag: 1.3.0
+Stable tag: 1.3.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Add unlimited custom tabs to WooCommerce products and assign them globally by category, tag, or brand. Supports sorting, YouTube embeds, and shortcodes.  
+Add custom tabs to WooCommerce products and assign them by category, tag, brand, or product. Supports sorting, YouTube embeds, and shortcodes.  
 
 == Description ==
 
@@ -34,10 +34,40 @@ Enhance your WooCommerce product pages today with Custom Product Tabs for WooCom
 
 
 
-== Installation ==
+== How to Use ==
 
-1. In your WordPress admin panel, got to Plugins -> New Plugin, search for "Custom Product Tabs For Woocommerce" and click install now.
-2. Activate the plugin
+1. **Install & Activate the Plugin**  
+   - Go to **WordPress Admin > Plugins > Add New**  
+   - Search for **Custom Product Tabs for WooCommerce** (or upload the plugin ZIP)  
+   - Click **Install Now**, then **Activate**  
+
+2. **Create a New Product Tab**  
+   - Navigate to **Products > Tabs**  
+   - Click **Add New Tab**  
+   - Enter a **Tab Title** and add content using the editor  
+
+3. **Assign Tabs to Products**  
+   - You can assign tabs to:  
+     - **Specific Products**  
+     - **Categories**  
+     - **Tags**  
+     - **Brands** (Compatible with WooCommerce brands and third-party brand plugins)  
+
+   - Select the appropriate **Products, Categories, Tags, or Brands** in the assignment section  
+
+4. **Product-Specific Tabs**  
+   - When editing a product, go to the **Product Data** section  
+   - Navigate to the **Custom Tabs** tab  
+   - Click **Add New Tab**, enter the tab title and content  
+   - These tabs will only appear on the selected product  
+
+5. **Tab Settings**  
+   - Go to **Settings > Product Tab Settings**  
+   - Customize tab behavior, visibility, and default settings  
+   - Configure the default order for global tabs   
+
+
+
 
 == Frequently Asked Questions ==
 
@@ -91,6 +121,9 @@ For a detailed guide on translating WooCommerce product tabs using Polylang, ple
 6. Help & FAQs
 
 == Changelog ==
+
+= 1.3.1 =
+* [Tweak] Added the ability to assign global tabs to specific products.
 
 = 1.3.0 =
 * Tested with WC 9.6
@@ -240,7 +273,5 @@ For a detailed guide on translating WooCommerce product tabs using Polylang, ple
 
 == Upgrade Notice ==
 
-= 1.3.0 =
-* Tested with WC 9.6
-* [Add] General settings page added. 
-* [Add] Help and FAQ page added. 
+= 1.3.1 =
+* [Tweak] Added the ability to assign global tabs to specific products. 

@@ -58,15 +58,25 @@ class Wb_Custom_Product_Tabs_For_Woocommerce_Admin {
 	 * Register the stylesheets for the admin area.
 	 *
 	 * @since    1.0.0
+	 * @since    1.3.1  Enqueued WooCommerce admin styles and Select2 styles for Global tab products meta box.
 	 */
 	public function enqueue_styles() {
 		wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/wb-custom-product-tabs-for-woocommerce-admin.css', array(), $this->version, 'all' );
 
+		global $post_type;
+
+		if ( $post_type && WB_TAB_POST_TYPE === $post_type ) {
+	        // Enqueue both WooCommerce admin styles and Select2 styles.
+    		wp_enqueue_style('woocommerce_admin_styles');
+    		wp_enqueue_style('select2');
+	    }
 	}
 
 	/**
 	 * Register the JavaScript for the admin area.
+	 * 
 	 * @since    1.0.0
+	 * @since    1.3.1  WooCommerce's Select2 script for Global tab products meta box.
 	 */
 	public function enqueue_scripts() {
 
@@ -84,6 +94,13 @@ class Wb_Custom_Product_Tabs_For_Woocommerce_Admin {
 			),
 			'default_tab_position'=> Wb_Custom_Product_Tabs_For_Woocommerce::get_default_tab_position(),	
 		));
+
+		global $post_type;
+
+		if ( $post_type && WB_TAB_POST_TYPE === $post_type ) {
+	        // WooCommerce's Select2 script.
+    		wp_enqueue_script('wc-enhanced-select');
+	    }
 	}
 
 
@@ -147,7 +164,7 @@ class Wb_Custom_Product_Tabs_For_Woocommerce_Admin {
 			$title = isset( $_POST['wb_tab'][ $i ]['title'] ) ? trim(sanitize_text_field(wp_unslash($_POST['wb_tab'][ $i ]['title']))) : '';
 			$content = isset( $_POST['wb_tab'][ $i ]['content'] ) ? trim(wp_kses_post(wp_unslash($_POST['wb_tab'][ $i ]['content']))) : '';
 			$position = (int) isset( $_POST['wb_tab'][ $i ]['position'] ) ? sanitize_text_field(wp_unslash($_POST['wb_tab'][ $i ]['position'])) : 0;
-			$nickname = isset( $_POST['wb_tab'][ $i ]['nickname'] ) ? trim(sanitize_text_field(wp_unslash($_POST['wb_tab'][ $i ]['nickname']))) : '';
+			$nickname = isset( $_POST['wb_tab'][ $i ]['nickname'] ) ? trim(sanitize_text_field(wp_unslash($_POST['wb_tab'][ $i ]['nickname']))) : ''; 
 
 			if ( $title && $content ) {
 				$out[]=array(
@@ -161,7 +178,7 @@ class Wb_Custom_Product_Tabs_For_Woocommerce_Admin {
 				break;
 			}
 		}
-		
+
 		return $out;
 	}
 
@@ -179,7 +196,7 @@ class Wb_Custom_Product_Tabs_For_Woocommerce_Admin {
 		$product=wc_get_product($post_id);
 		$sanitized_tab_data = $this->sanitize_tab_input();
 
-		// Now sanitize the tab data explicitly before updating the meta
+		// Now sanitize the tab data explicitly before updating the meta.
 		$product->update_meta_data( 'wb_custom_tabs', $sanitized_tab_data );
 
         $product->save();
@@ -243,26 +260,34 @@ class Wb_Custom_Product_Tabs_For_Woocommerce_Admin {
 	}
 
 	/**
+	 * 	Save metabox data.
+	 * 
 	 *	@since 1.0.2
-	 *	Save metabox data
-	 * 	@since 1.1.0 	Added option to save nickname info
+	 * 	@since 1.1.0 	Added option to save nickname info.
+	 * 	@since 1.3.1 	Added option to save tab products.
 	 */
 	public function save_meta_box_data($post_id)
 	{
-		if(array_key_exists('wb_tab_meta_box', $_POST))
-		{
+		if ( array_key_exists( 'wb_tab_meta_box', $_POST ) ) {
+
 			$tab_position=(int) isset( $_POST['wb_tab_tab_position'] ) ? sanitize_text_field( wp_unslash( $_POST['wb_tab_tab_position'] ) ) : 0;
 			update_post_meta($post_id, '_wb_tab_position', $tab_position);
 
 			$tab_nickname=isset( $_POST['wb_tab_tab_nickname'] ) ? sanitize_text_field( wp_unslash( $_POST['wb_tab_tab_nickname'] ) ) : '';
 			update_post_meta($post_id, '_wb_tab_nickname', $tab_nickname);
+
+			// Save the selected products.
+		    $selected_products = isset($_POST['_wb_tab_products']) ? array_map( 'absint', $_POST['_wb_tab_products'] ) : array();
+		    update_post_meta( $post_id, '_wb_tab_products', $selected_products );
 		}
 	}
 	
 	/**
+	 * 	Register meta box for global tab custom post type
+	 * 
 	 *	@since 1.0.2
-	 *	Register meta box for global tab custom post type
-	 * 	@since 1.1.0 Moved tab location from `side` to `normal`. Tab title and id updated 
+	 * 	@since 1.1.0 Moved tab location from `side` to `normal`. Tab title and id updated.
+	 * 	@since 1.3.1 Added products meta box.
 	 */
 	public function register_meta_box()
 	{
@@ -274,6 +299,15 @@ class Wb_Custom_Product_Tabs_For_Woocommerce_Admin {
 			'normal',
 			'default'
         );
+
+        add_meta_box(
+			'wb_tab_products_meta_box',
+			__('Products', 'wb-custom-product-tabs-for-woocommerce'), 
+			array($this, '_tab_products_meta_box_html'),
+			WB_TAB_POST_TYPE,
+			'side',
+			'default'
+        );
 	}
 
 	/**
@@ -281,7 +315,7 @@ class Wb_Custom_Product_Tabs_For_Woocommerce_Admin {
 	 * 
 	 * 	@since 1.1.0
 	 */
-	public function _tab_other_info_meta_box_html( $post, $box)
+	public function _tab_other_info_meta_box_html( $post, $box )
 	{
 		$tab_position=Wb_Custom_Product_Tabs_For_Woocommerce::_get_global_tab_position($post->ID);
 		$tab_nickname=Wb_Custom_Product_Tabs_For_Woocommerce::_get_global_tab_nickname($post->ID);
@@ -890,5 +924,16 @@ class Wb_Custom_Product_Tabs_For_Woocommerce_Admin {
 		$page_url = admin_url('options-general.php?page=wb-product-tab-settings');
 
 		include_once WB_TAB_ROOT_PATH . 'admin/views/settings.php';
+	}
+
+
+	/**
+	 * 	Global tab products meta box.
+	 * 
+	 * 	@since 1.3.1
+	 */
+	public function _tab_products_meta_box_html( $post, $box ) {
+		$tab_products = Wb_Custom_Product_Tabs_For_Woocommerce::_get_global_tab_products( $post->ID );
+		include WB_TAB_ROOT_PATH.'admin/views/_global_tab_products_metabox.php';
 	}
 }

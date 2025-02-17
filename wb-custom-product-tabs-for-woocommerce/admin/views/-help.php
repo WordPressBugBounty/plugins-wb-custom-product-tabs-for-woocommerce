@@ -136,7 +136,7 @@ if (!defined('ABSPATH')) {
                     <li>
                         <strong><?php esc_html_e('Publish & Apply:', 'wb-custom-product-tabs-for-woocommerce'); ?></strong>
                         <br>
-                        <?php esc_html_e('Once you assign a global tab to any category, tag, or brand, it will automatically appear under all products belonging to those taxonomies.', 'wb-custom-product-tabs-for-woocommerce'); ?>
+                        <?php esc_html_e('Once you assign a global tab to any category, tag, brand, or individual product, it will automatically appear on all products associated with those taxonomies or on the specific product page.', 'wb-custom-product-tabs-for-woocommerce'); ?>
                     </li>
 
                     <li>
@@ -160,9 +160,9 @@ if (!defined('ABSPATH')) {
 
                 <ol>
                     <li>
-                        <strong><?php esc_html_e('Is the tab assigned to any category, tag, or brand?', 'wb-custom-product-tabs-for-woocommerce'); ?></strong>
+                        <strong><?php esc_html_e('Is the tab assigned to any product, category, tag, or brand?', 'wb-custom-product-tabs-for-woocommerce'); ?></strong>
                         <br>
-                        <?php esc_html_e('By default, global tabs are not assigned to any products. You need to assign them to a category, tag, or brand for them to appear.', 'wb-custom-product-tabs-for-woocommerce'); ?>
+                        <?php esc_html_e('By default, global tabs are not assigned to any products. You need to assign them to a product, category, tag, or brand for them to appear.', 'wb-custom-product-tabs-for-woocommerce'); ?>
                     </li>
 
                     <li>
