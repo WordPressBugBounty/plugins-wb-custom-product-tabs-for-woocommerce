@@ -5,7 +5,7 @@ Tags: product tabs, tab manager, woocommerce custom tabs, woocommerce product ta
 Requires at least: 3.5.0
 Tested up to: 6.7
 Requires PHP: 5.6
-Stable tag: 1.3.1
+Stable tag: 1.3.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -19,6 +19,11 @@ This plugin is perfect for store owners who want to provide customers with detai
 
 Enhance your WooCommerce product pages today with Custom Product Tabs for WooCommerce!
 
+<pre>
+Some users have requested a way to migrate tabs from their <a href="https://wordpress.org/plugins/yikes-inc-easy-custom-woocommerce-product-tabs/" rel="ugc">old plugin</a> to ours.
+To assist with this, we have developed a migrator plugin.
+If you need this plugin, please contact us through the <a href="https://webbuilder143.com/" rel="nofollow ugc">contact form</a> on our website.
+</pre>
 
 == Features ==
 
@@ -67,6 +72,8 @@ Enhance your WooCommerce product pages today with Custom Product Tabs for WooCom
    - Configure the default order for global tabs   
 
 
+== Translate tabs using Polylang ==
+http://www.youtube.com/watch?v=F90dOxEjkE8
 
 
 == Frequently Asked Questions ==
@@ -81,7 +88,7 @@ Yes, you can add HTML content. The tab content section uses the standard WP edit
 There is no restriction on the number of tabs you can add. You can include multiple tabs for individual products.
 
 = What are global tabs? =
-Global tabs are reusable tabs that can be assigned to multiple products based on their category or tags.
+Global tabs are reusable tabs that can be assigned to multiple products based on their category, tags, brands.
 
 = Why is my global tab not displaying on the front end? =
 Ensure the global tab is correctly assigned to products via categories, tags, or brands. Additionally, you can modify the default behavior of global tabs in the plugin settings. The "Global Tab Behavior" option allows you to display global tabs on all products, even without assigning them to specific categories, tags, or brands.
@@ -121,6 +128,9 @@ For a detailed guide on translating WooCommerce product tabs using Polylang, ple
 6. Help & FAQs
 
 == Changelog ==
+
+= 1.3.2 =
+* Tested with WC 9.7
 
 = 1.3.1 =
 * [Tweak] Added the ability to assign global tabs to specific products.
@@ -273,5 +283,5 @@ For a detailed guide on translating WooCommerce product tabs using Polylang, ple
 
 == Upgrade Notice ==
 
-= 1.3.1 =
-* [Tweak] Added the ability to assign global tabs to specific products. 
+= 1.3.2 =
+* Tested with WC 9.7

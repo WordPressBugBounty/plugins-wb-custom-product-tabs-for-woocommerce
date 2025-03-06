@@ -611,6 +611,8 @@ class Wb_Custom_Product_Tabs_For_Woocommerce_Admin {
             	jQuery('.wp-list-table').after('<div style="display:inline-block; width:100%; box-shadow:2px 1px 2px 0px #e2d5d5; margin-top:15px;padding: 10px;box-sizing: border-box;margin-bottom: 15px; border-left: solid 4px blueviolet; background:#e1eef6;"><?php echo wp_kses_post( $msg ); ?></div>');
 
             	jQuery('.page-title-action').after('<a style="margin-left:10px; font-weight:bold; background-image: linear-gradient(75deg, #db3ef6, #400cb4); color: #fff; padding:5px 10px; border:solid 1px #d73df4; border-radius:5px; top:-3px; display: inline-block; position: relative; text-decoration:none;" href="https://webbuilder143.com/support-our-work/?utm_source=plugin&utm_medium=global-tabs&utm_campaign=add-new&utm_id=tabs-plugin&utm_content=donate" target="_blank"><?php esc_html_e('Donate to support the Custom Product Tabs plugin.', 'wb-custom-product-tabs-for-woocommerce');?></a>');
+
+            	jQuery('.page-title-action').after('<a style="margin-left:10px; margin-top: 10px; display:inline-block; position: relative; text-decoration:none;" class="button button-primary" href="<?php echo esc_url( admin_url('options-general.php?page=wb-product-tab-settings') );?>"><?php esc_html_e('Tab settings.', 'wb-custom-product-tabs-for-woocommerce');?></a>');
             });
         </script>
         <?php
