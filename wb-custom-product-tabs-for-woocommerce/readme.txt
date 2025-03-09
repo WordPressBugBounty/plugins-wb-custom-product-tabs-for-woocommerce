@@ -5,7 +5,7 @@ Tags: product tabs, tab manager, woocommerce custom tabs, woocommerce product ta
 Requires at least: 3.5.0
 Tested up to: 6.7
 Requires PHP: 5.6
-Stable tag: 1.3.2
+Stable tag: 1.3.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -128,6 +128,10 @@ For a detailed guide on translating WooCommerce product tabs using Polylang, ple
 6. Help & FAQs
 
 == Changelog ==
+
+= 1.3.3 =
+* [Fix] Custom tab not activating when changing URL hash.
+* [Fix] Youtube embed popup position issue.
 
 = 1.3.2 =
 * Tested with WC 9.7
@@ -283,5 +287,6 @@ For a detailed guide on translating WooCommerce product tabs using Polylang, ple
 
 == Upgrade Notice ==
 
-= 1.3.2 =
-* Tested with WC 9.7
+= 1.3.3 =
+* [Fix] Custom tab not activating when changing URL hash.
+* [Fix] Youtube embed popup position issue.

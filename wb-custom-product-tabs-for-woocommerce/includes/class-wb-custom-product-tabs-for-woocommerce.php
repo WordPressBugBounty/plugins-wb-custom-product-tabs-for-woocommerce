@@ -70,7 +70,7 @@ class Wb_Custom_Product_Tabs_For_Woocommerce {
 		if ( defined( 'WB_CUSTOM_PRODUCT_TABS_FOR_WOOCOMMERCE_VERSION' ) ) {
 			$this->version = WB_CUSTOM_PRODUCT_TABS_FOR_WOOCOMMERCE_VERSION;
 		} else {
-			$this->version = '1.3.2';
+			$this->version = '1.3.3';
 		}
 		$this->plugin_name = 'wb-custom-product-tabs-for-woocommerce';
 
@@ -292,6 +292,13 @@ class Wb_Custom_Product_Tabs_For_Woocommerce {
 		 * @since 1.1.5
 		 */
 		add_shortcode('wb_cpt_youtube_embed_shortcode', array($plugin_public, 'add_youtube_embed_shortcode'));
+
+		/**
+		 * Show tab content by URL hash
+		 * 
+		 * @since 1.3.3
+		 */
+		$this->loader->add_action('wp_footer', $plugin_public, 'activate_tab_by_url');
 	}
 
 	/**

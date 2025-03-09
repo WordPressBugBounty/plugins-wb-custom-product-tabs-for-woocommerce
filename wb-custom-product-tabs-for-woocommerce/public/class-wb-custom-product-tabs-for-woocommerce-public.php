@@ -171,4 +171,30 @@ class Wb_Custom_Product_Tabs_For_Woocommerce_Public {
 
 		return '<iframe width="' . esc_attr($atts['width']) . '" height="' . esc_attr($atts['height']) . '" src="https://www.youtube.com/embed/' . esc_attr($atts['video_id']) . '"  frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>';
 	}
+
+	/**
+	 * 	Show tab content by URL hash
+	 * 
+	 * 	@since 1.3.3
+	 */
+	public function activate_tab_by_url() {
+	    if ( function_exists('is_product') && is_product() ) {
+		?>
+			<script type="text/javascript">
+				function wb_cptb_activate_tab_by_url(){
+					let hash  = window.location.hash; 
+					if ( hash && hash.toLowerCase().indexOf( '#tab-wb_cptb_' ) === 0) {
+						jQuery('.woocommerce-tabs.wc-tabs-wrapper .tabs.wc-tabs li a[href="' + hash + '"]').trigger('click');
+					}
+				}
+				jQuery(document).ready(function(){
+					wb_cptb_activate_tab_by_url();
+				});
+				jQuery(window).on('hashchange', function() {
+					wb_cptb_activate_tab_by_url();
+				});
+			</script>
+	    <?php
+		}
+	}
 }
