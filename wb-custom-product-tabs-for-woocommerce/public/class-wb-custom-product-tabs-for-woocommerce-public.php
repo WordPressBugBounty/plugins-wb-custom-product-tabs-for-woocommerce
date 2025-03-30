@@ -79,6 +79,7 @@ class Wb_Custom_Product_Tabs_For_Woocommerce_Public {
 	 * 
 	 *	@since 1.0.0
 	 *	@since 1.1.4 	[Fix] Divi layout builder is not loading
+	 *	@since 1.3.4 	Custom tab slug implemented.
 	 */
 	public function add_custom_tab($tabs)
 	{
@@ -101,10 +102,29 @@ class Wb_Custom_Product_Tabs_For_Woocommerce_Public {
 			{
 				$wb_inc++;
 
-				/* filter to alter tab content */
-				$tab_data=apply_filters('wb_cptb_alter_tab_content', $tab_data, $product);
-				$tab_key='wb_cptb_'.$wb_inc;			
-				$tabs[$tab_key]=array(
+				// Filter to alter tab content.
+				$tab_data = apply_filters('wb_cptb_alter_tab_content', $tab_data, $product);
+
+				$slug = $tab_data['slug'];
+
+				if ( "" !== $slug ) { // Check for duplicates.
+					$original_slug = $slug;
+					$counter = $wb_inc;
+
+					while ( array_key_exists( $slug, $tabs ) ) {
+	                    $slug = $original_slug . '-' . $counter++;
+	                }
+	            } else {
+	            	$original_slug = 'wb_cptb_';
+	            	$slug = $original_slug . $wb_inc;
+	            	$counter = $wb_inc;
+
+	            	while ( array_key_exists( $slug, $tabs ) ) {
+	                    $slug = $original_slug . $counter++;
+	                }
+	            }
+			
+				$tabs[ $slug ]=array(
 					'title'=> trim($tab_data['title']),
 					'priority'=>$tab_data['position'],
 					'callback'=> array($this, 'set_tab_content'),

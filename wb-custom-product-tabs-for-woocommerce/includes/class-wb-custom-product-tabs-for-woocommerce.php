@@ -70,7 +70,7 @@ class Wb_Custom_Product_Tabs_For_Woocommerce {
 		if ( defined( 'WB_CUSTOM_PRODUCT_TABS_FOR_WOOCOMMERCE_VERSION' ) ) {
 			$this->version = WB_CUSTOM_PRODUCT_TABS_FOR_WOOCOMMERCE_VERSION;
 		} else {
-			$this->version = '1.3.3';
+			$this->version = '1.3.4';
 		}
 		$this->plugin_name = 'wb-custom-product-tabs-for-woocommerce';
 
@@ -220,7 +220,7 @@ class Wb_Custom_Product_Tabs_For_Woocommerce {
 		 * 
 		 * @since 1.1.5
 		 */
-		$this->loader->add_action('in_admin_header', $plugin_admin, 'add_youtube_embed_popup');
+		$this->loader->add_action('in_admin_header', $plugin_admin, 'add_youtube_embed_and_tab_edit_popup');
 
 
 		/**
@@ -374,6 +374,7 @@ class Wb_Custom_Product_Tabs_For_Woocommerce {
 	 *
 	 * @since     1.0.2
 	 * @since     1.2.4 				Added compatibility for brands.
+	 * @since     1.3.4 				Custom tab slug implemented.
 	 * @param     WC_Product object   	$product  
 	 * @param     boolean   			$sort  			Sort the product based on tab position
 	 * @return    array     			Product tabs
@@ -385,8 +386,8 @@ class Wb_Custom_Product_Tabs_For_Woocommerce {
 		*/
 		$product_id=(method_exists($product, 'get_id')===true ? $product->get_id() : $product->ID);
 
-		$wb_tabs=$product->get_meta('wb_custom_tabs', true);	
-		$wb_tabs=(is_array($wb_tabs) ? $wb_tabs : array());
+		$wb_tabs = $product->get_meta('wb_custom_tabs', true);	
+		$wb_tabs = ( is_array( $wb_tabs ) ? $wb_tabs : array() );
 
 		/* 
 		*	Taking global tabs 
@@ -412,7 +413,16 @@ class Wb_Custom_Product_Tabs_For_Woocommerce {
 				$post_id = get_the_ID();
 				$tab_position = self::_get_global_tab_position( $post_id );		
 				$tab_nickname = self::_get_global_tab_nickname( $post_id );		
-				$wb_tabs[] = array('title'=>get_the_title(), 'content'=>get_the_content(), 'tab_type'=>'global', 'position'=>$tab_position, 'nickname'=>$tab_nickname, 'tab_id'=>$post_id);
+				$tab_slug = self::_get_global_tab_slug( $post_id );		
+				$wb_tabs[] = array(
+					'title'=>get_the_title(), 
+					'content'=>get_the_content(), 
+					'tab_type'=>'global', 
+					'position'=>$tab_position, 
+					'nickname'=>$tab_nickname, 
+					'slug'=>$tab_slug, 
+					'tab_id'=>$post_id
+				);
 				$tab_ids[] = $post_id;
 			}
 		}
@@ -494,8 +504,17 @@ class Wb_Custom_Product_Tabs_For_Woocommerce {
 				if ( ! in_array( $post_id, $tab_ids ) ) { // Not already added.
 
 					$tab_position=self::_get_global_tab_position($post_id);		
-					$tab_nickname=self::_get_global_tab_nickname($post_id);		
-					$wb_tabs[]=array('title'=>get_the_title(), 'content'=>get_the_content(), 'tab_type'=>'global', 'position'=>$tab_position, 'nickname'=>$tab_nickname, 'tab_id'=>$post_id);
+					$tab_nickname=self::_get_global_tab_nickname($post_id);
+					$tab_slug = self::_get_global_tab_slug( $post_id );		
+					$wb_tabs[] = array( 
+						'title'=>get_the_title(), 
+						'content'=>get_the_content(), 
+						'tab_type'=>'global', 
+						'position'=>$tab_position, 
+						'nickname'=>$tab_nickname,
+						'slug' => $tab_slug,
+						'tab_id'=>$post_id
+					);
 				}
 			}
 		}
@@ -519,8 +538,17 @@ class Wb_Custom_Product_Tabs_For_Woocommerce {
 					$tab_products = self::_get_global_tab_products( $post_id );
 					if ( empty( $tab_products ) ) {
 						$tab_position=self::_get_global_tab_position($post_id);		
-						$tab_nickname=self::_get_global_tab_nickname($post_id);		
-						$wb_tabs[]=array('title'=>get_the_title(), 'content'=>get_the_content(), 'tab_type'=>'global', 'position'=>$tab_position, 'nickname'=>$tab_nickname, 'tab_id'=>$post_id);
+						$tab_nickname=self::_get_global_tab_nickname($post_id);
+						$tab_slug = self::_get_global_tab_slug( $post_id );	
+						$wb_tabs[]= array( 
+							'title' => get_the_title(), 
+							'content' => get_the_content(), 
+							'tab_type' => 'global', 
+							'position' => $tab_position, 
+							'nickname' => $tab_nickname,
+							'tab_slug' => $tab_slug, 
+							'tab_id' => $post_id
+						);
 					}		
 				}
 			}
@@ -546,16 +574,26 @@ class Wb_Custom_Product_Tabs_For_Woocommerce {
 	 * 	@param int $id Tab ID.
 	 * 	@return int Tab position.
 	 */
-	public static function _get_global_tab_position($id)
-	{
+	public static function _get_global_tab_position( $id ) {
 		$tab_position=get_post_meta($id, '_wb_tab_position', true);
 		return absint( "" === $tab_position ? self::get_default_tab_position() : $tab_position );
 	}
 
-	public static function _get_global_tab_nickname($id)
-	{
+	public static function _get_global_tab_nickname( $id ) {
 		$tab_nickname=get_post_meta($id, '_wb_tab_nickname', true);
 		return $tab_nickname===false ? '' : $tab_nickname;
+	}
+
+	/**
+	 * 	Get global tab slug.
+	 * 
+	 * 	@since 1.3.4
+	 * 	@param int $id Tab ID.
+	 * 	@return string Tab slug.
+	 */
+	public static function _get_global_tab_slug( $id ) {
+		$tab_slug = get_post_meta( $id, '_wb_tab_slug', true );
+		return ( $tab_slug === false ? '' : $tab_slug );
 	}
 
 	/**

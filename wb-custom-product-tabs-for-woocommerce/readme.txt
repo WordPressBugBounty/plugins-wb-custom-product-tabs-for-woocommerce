@@ -5,11 +5,11 @@ Tags: product tabs, tab manager, woocommerce custom tabs, woocommerce product ta
 Requires at least: 3.5.0
 Tested up to: 6.7
 Requires PHP: 5.6
-Stable tag: 1.3.3
+Stable tag: 1.3.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Add custom tabs to WooCommerce products and assign them by category, tag, brand, or product. Supports sorting, YouTube embeds, and shortcodes.  
+Add unlimited custom tabs to WooCommerce products and assign them by category, tag, brand, or product. Supports sorting, YouTube embed, and shortcode.  
 
 == Description ==
 
@@ -23,6 +23,8 @@ Enhance your WooCommerce product pages today with Custom Product Tabs for WooCom
 Some users have requested a way to migrate tabs from their <a href="https://wordpress.org/plugins/yikes-inc-easy-custom-woocommerce-product-tabs/" rel="ugc">old plugin</a> to ours.
 To assist with this, we have developed a migrator plugin.
 If you need this plugin, please contact us through the <a href="https://webbuilder143.com/" rel="nofollow ugc">contact form</a> on our website.
+
+Most of the time, we try to reply within the same day or the next day. Please check your inbox and spam folder for our response.
 </pre>
 
 == Features ==
@@ -35,6 +37,7 @@ If you need this plugin, please contact us through the <a href="https://webbuild
 ✅ Multi-Language Support – Compatible with WPML and Polylang for multilingual stores.
 ✅ Rich Content Support – Add extra product images, detailed descriptions, videos, FAQs, and more.
 ✅ Shortcode Compatibility – Use WordPress shortcodes to insert dynamic content into tabs.
+✅ Tab slug – SEO friendly tab slug.
 ✅ Developer-Friendly Hooks – Includes multiple hooks for customization and integration with third-party plugins.
 
 
@@ -115,6 +118,9 @@ Yes, you have the option to delete the tabs as needed.
 = How can I add YouTube videos to the tab content? =
 To add YouTube videos to the tab content, simply use the YouTube embed button located just above the tab content editor.
 
+= How can I add an SEO-friendly URL slug for my tabs? =
+On the tab edit screen, you have the option to manually enter a tab slug. Alternatively, you can generate a slug from the tab title.
+
 = How do I translate tabs using Polylang? =
 For a detailed guide on translating WooCommerce product tabs using Polylang, please visit this article: [How to translate tabs using Polylang](https://webbuilder143.com/how-to-translate-woocommerce-product-tabs-with-polylang/?utm_source=wordpressorg&utm_medium=readme&utm_campaign=faq&utm_content=polylang).
 
@@ -128,6 +134,11 @@ For a detailed guide on translating WooCommerce product tabs using Polylang, ple
 6. Help & FAQs
 
 == Changelog ==
+
+= 1.3.4 =
+* [Fix] Tab content validation failed in the editor's text view. Thanks to Richard for pointing out the issue.
+* [Fix] Tab edit popup was hidden under the overlay in certain conditions. Thanks to Cheryl for helping us replicate and fix the issue.
+* [Add] Option to add an SEO-friendly slug for tab URLs.
 
 = 1.3.3 =
 * [Fix] Custom tab not activating when changing URL hash.
@@ -287,6 +298,7 @@ For a detailed guide on translating WooCommerce product tabs using Polylang, ple
 
 == Upgrade Notice ==
 
-= 1.3.3 =
-* [Fix] Custom tab not activating when changing URL hash.
-* [Fix] Youtube embed popup position issue.
+= 1.3.4 =
+* [Fix] Tab content validation failed in the editor's text view. Thanks to Richard for pointing out the issue.
+* [Fix] Tab edit popup was hidden under the overlay in certain conditions. Thanks to Cheryl for helping us replicate and fix the issue.
+* [Add] Option to add an SEO-friendly slug for tab URLs.

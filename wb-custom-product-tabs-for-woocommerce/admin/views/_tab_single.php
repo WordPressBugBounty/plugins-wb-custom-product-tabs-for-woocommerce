@@ -70,6 +70,11 @@ if (!defined('ABSPATH')) {
 				<input type="text" name="wb_tab[<?php echo esc_attr($key);?>][nickname]" class="wb_tabpanel_txt wb_tab_nickname_input" placeholder="<?php esc_attr_e('Tab nickname', 'wb-custom-product-tabs-for-woocommerce'); ?>" value="<?php echo esc_attr($tab_nickname);?>">
 				<div class="wb_tab_er"></div>
 			</div>
+			<div class="wb_tab_panel_frmgrp">
+				<label><?php esc_html_e('Tab slug', 'wb-custom-product-tabs-for-woocommerce');?><span class="woocommerce-help-tip" data-tip="<?php esc_attr_e('Tab slug', 'wb-custom-product-tabs-for-woocommerce'); ?>"></span></label>
+				<input type="text" name="wb_tab[<?php echo esc_attr($key);?>][slug]" class="wb_tabpanel_txt wb_tab_slug_input" placeholder="<?php esc_attr_e('Tab slug', 'wb-custom-product-tabs-for-woocommerce'); ?>" value="<?php echo esc_attr($tab_slug);?>">
+				<div class="wb_tab_er"></div>
+			</div>
 		<?php
 		}
 		?>

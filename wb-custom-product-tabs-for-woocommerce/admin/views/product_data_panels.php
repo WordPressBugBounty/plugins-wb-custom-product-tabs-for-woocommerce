@@ -3,57 +3,6 @@ if (!defined('ABSPATH')) {
 	exit;
 }
 ?>
-<div class="wb_tab_popup_overlay"></div>
-<div class="wb_tab_popup wb_cptb_tab_edit_popup">
-	<div class="wb_tab_popup_hd">		
-		<span class="wb_tab_popup_hd_txt">
-			<span class="dashicons dashicons-edit"></span>
-			<?php esc_html_e('Edit', 'wb-custom-product-tabs-for-woocommerce');?>
-		</span>
-		<span class="wb_tab_popup_close" title="<?php esc_attr_e('Close', 'wb-custom-product-tabs-for-woocommerce');?>">
-			<span class="dashicons dashicons-dismiss"></span>
-		</span>
-	</div>
-	<div class="wb_tab_popup_content">
-		<div class="wb_tab_panel_frmgrp" style="width:50%;">
-			<label><?php esc_html_e('Tab title', 'wb-custom-product-tabs-for-woocommerce');?><span class="woocommerce-help-tip" data-tip="<?php esc_attr_e('Title for tab', 'wb-custom-product-tabs-for-woocommerce'); ?>"></span></label>
-			<input type="text" name="wb_tab_title" class="wb_tabpanel_txt wb_tab_title_input" placeholder="<?php esc_attr_e('Title for tab', 'wb-custom-product-tabs-for-woocommerce'); ?>" value="">
-			<div class="wb_tab_er"></div>
-		</div>
-		<div class="wb_tab_panel_frmgrp" style="width:50%;">
-			<label><?php esc_html_e('Tab position', 'wb-custom-product-tabs-for-woocommerce');?><span class="woocommerce-help-tip" data-tip="<?php esc_attr_e('Tab position', 'wb-custom-product-tabs-for-woocommerce'); ?>"></span></label>
-			<input type="number" min="0" step="1" name="wb_tab_position" class="wb_tabpanel_txt wb_tab_position_input" placeholder="<?php esc_attr_e('Tab position', 'wb-custom-product-tabs-for-woocommerce'); ?>" value="" style="float:left; width:100px;">			
-			<div class="wb_tabpanel_hlp" style="margin-top:10px; margin-left:15px;">
-				<a href="https://webbuilder143.com/how-to-arrange-woocommerce-custom-product-tabs/?utm_source=plugin&utm_medium=product-edit&utm_campaign=tab-position&utm_content=positioning" target="_blank"><?php esc_html_e('Know more', 'wb-custom-product-tabs-for-woocommerce'); ?> <span class="dashicons dashicons-external" style="text-decoration:none;"></span></a>
-			</div>
-			<div class="wb_tab_er"></div>
-		</div>
-		<div class="wb_tab_panel_frmgrp">
-			<label><?php esc_html_e('Tab content', 'wb-custom-product-tabs-for-woocommerce');?><span class="woocommerce-help-tip" data-tip="<?php esc_attr_e('Content for tab', 'wb-custom-product-tabs-for-woocommerce'); ?>"></span></label>
-			<?php wp_editor('','wb_tab_editor',array(
-					'editor_class'=>'wb_tab_rte',
-					'editor_height'=>220,
-					'textarea_rows'=>7,
-					'tinymce' => array(
-				        'height' =>220,
-				    )
-				) 
-			); 
-			?>
-		</div>
-		<div class="wb_tab_panel_frmgrp">
-			<label><?php esc_html_e('Tab nickname', 'wb-custom-product-tabs-for-woocommerce');?><span class="woocommerce-help-tip" data-tip="<?php esc_attr_e('A unique nickname will be useful for identifying the tab', 'wb-custom-product-tabs-for-woocommerce'); ?>"></span></label>
-			<div style="float:left; width:50%;">
-				<input type="text" name="wb_tab_nickname" class="wb_tabpanel_txt wb_tab_nickname_input" placeholder="<?php esc_attr_e('Tab nickname', 'wb-custom-product-tabs-for-woocommerce'); ?>" value="" style="float:left;">
-				<div class="wb_tab_er"></div>
-			</div>
-
-			<button class="button button-primary wb_tab_done_btn wb_cptb_tab_save_btn" type="button"><?php esc_html_e('Done', 'wb-custom-product-tabs-for-woocommerce');?></button>
-			<button class="button button-secondary wb_tab_cancel_btn" type="button"><?php esc_html_e('Cancel', 'wb-custom-product-tabs-for-woocommerce');?></button>
-		</div>
-	</div>
-</div>
-
 <div id='wb_custom_tabs' class='panel woocommerce_options_panel'>
 	<div class="options_group">
 		<div class="wb_tab_main_hd">
@@ -78,6 +27,7 @@ if (!defined('ABSPATH')) {
 				{
 					$tab_title=$tab['title'];
 					$tab_nickname=(isset($tab['nickname']) ? $tab['nickname'] :'');
+					$tab_slug = ( isset( $tab['slug'] ) ? $tab['slug'] :'' );
 					$tab_content=$tab['content'];
 					$tab_type=$tab['tab_type'];
 					$position=$tab['position'];

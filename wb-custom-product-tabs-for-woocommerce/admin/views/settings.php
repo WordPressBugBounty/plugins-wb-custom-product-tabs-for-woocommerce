@@ -6,7 +6,7 @@ if (!defined('ABSPATH')) {
 <style type="text/css">
 .wb_cptb_header{ width:calc( 100% + 42px ); min-height:60px; height:auto; background:#fff; margin-left:-22px; margin-top:-10px; border-bottom: 1px solid #dcdcde; margin-bottom:3rem; text-align: center; position:relative; }
 .wb_cptb_header_logo{ position:absolute; top:0px; left:10px; width:100px; }
-
+.wb_cptb_heading{ font-size: 23px; font-weight: 400; margin: 0; padding: 9px 0 4px; line-height: 1.3; }
 .wb_cptb_menu_tab_nav{
   -ms-grid-columns: 1fr 1fr;
   display: -ms-inline-grid;
@@ -27,7 +27,7 @@ if (!defined('ABSPATH')) {
 <div class="wrap">
     <div class="wb_cptb_header">
             <img src="<?php echo esc_url( WB_TAB_ROOT_URL . '/admin/images/logo-blue.png' ); ?>" class="wb_cptb_header_logo">
-            <h1><?php esc_html_e('Product tabs', 'wb-custom-product-tabs-for-woocommerce'); ?></h1>
+            <div class="wb_cptb_heading"><?php esc_html_e('Product tabs', 'wb-custom-product-tabs-for-woocommerce'); ?></div>
 
             <nav class="wb_cptb_menu_tab_nav">
                 <a href="<?php echo esc_url( $page_url . '&wb_cptb_tab=general' ); ?>" class="<?php echo esc_attr( 'general' === $tab ? 'active' : '' ); ?>">

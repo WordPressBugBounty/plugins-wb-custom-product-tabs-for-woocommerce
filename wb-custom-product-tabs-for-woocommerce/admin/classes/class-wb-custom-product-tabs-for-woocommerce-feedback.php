@@ -17,6 +17,13 @@ class Wb_Custom_Product_Tabs_For_Woocommerce_Feedback {
             return;
         }
 
+        // Once submitted, show only after 24 hour.
+        $submitted_at = absint( get_option( 'wb-cptb-feedback-submitted-at', 0 ) );
+        $twenty_four_hour_before = time() - 86400;
+        if ( $submitted_at && $submitted_at > $twenty_four_hour_before ) {
+            return;
+        }
+
         $this->reasons = array(
             'not-working' => __('Not working', 'wb-custom-product-tabs-for-woocommerce'),
             'found-better' => __('Found better', 'wb-custom-product-tabs-for-woocommerce'),
@@ -99,10 +106,14 @@ class Wb_Custom_Product_Tabs_For_Woocommerce_Feedback {
         			<textarea name="wb-cptb-uninstall-reason-brief"></textarea>
         		</div>
         		<div>
-        			<p><?php esc_html_e('No personal data is gathered when you submit this form.', 'wb-custom-product-tabs-for-woocommerce'); ?></p>
+        			<p><?php esc_html_e('No personal data is gathered when you submit this form.', 'wb-custom-product-tabs-for-woocommerce'); ?> 
+                      <?php esc_html_e('If you would like our support team to contact you, please include your email address in the additional information field along with your message.', 'wb-custom-product-tabs-for-woocommerce'); ?>
+                    </p>
         		</div>
         		<div style="width:100%; margin-top:0px; padding:15px 0px; box-sizing:border-box; float:left;">
-        			<button class="button button-primary wb-cptb-uninstall-submit" style="float:right;"><?php esc_html_e('Submit and deactivate', 'wb-custom-product-tabs-for-woocommerce'); ?></button>
+        			<a href="https://wordpress.org/support/plugin/wb-custom-product-tabs-for-woocommerce/" target="_blank"><?php esc_html_e('Help and Support.', 'wb-custom-product-tabs-for-woocommerce'); ?></a>
+
+                    <button class="button button-primary wb-cptb-uninstall-submit" style="float:right;"><?php esc_html_e('Submit and deactivate', 'wb-custom-product-tabs-for-woocommerce'); ?></button>
         			<a class="button button-secondary wb-cptb-skip-and-deactivate" style="float:right; margin-right:10px;"><?php esc_html_e('Skip and deactivate', 'wb-custom-product-tabs-for-woocommerce'); ?></a>
         			<a class="button button-secondary wb-cptb-cancel-uninstall" style="float:right; margin-right:10px;"><?php esc_html_e('Cancel', 'wb-custom-product-tabs-for-woocommerce'); ?></a>
         		</div>
@@ -151,6 +162,9 @@ class Wb_Custom_Product_Tabs_For_Woocommerce_Feedback {
             'cookies' 		=> array(),
             )
         );
+
+        // Save the submitted date.
+        update_option('wb-cptb-feedback-submitted-at', time());
 
         return;
     }

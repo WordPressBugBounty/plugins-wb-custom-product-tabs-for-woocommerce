@@ -91,6 +91,7 @@ class Wb_Custom_Product_Tabs_For_Woocommerce_Admin {
 				'invalid_video_id'=>__('Please enter valid YouTube video ID', 'wb-custom-product-tabs-for-woocommerce'),
 				'inserting'=>__('Inserting...', 'wb-custom-product-tabs-for-woocommerce'),
 				'insert'=>__('Insert', 'wb-custom-product-tabs-for-woocommerce'),
+				'title_is_empty'=>__('Tab title is empty', 'wb-custom-product-tabs-for-woocommerce'),
 			),
 			'default_tab_position'=> Wb_Custom_Product_Tabs_For_Woocommerce::get_default_tab_position(),	
 		));
@@ -164,15 +165,17 @@ class Wb_Custom_Product_Tabs_For_Woocommerce_Admin {
 			$title = isset( $_POST['wb_tab'][ $i ]['title'] ) ? trim(sanitize_text_field(wp_unslash($_POST['wb_tab'][ $i ]['title']))) : '';
 			$content = isset( $_POST['wb_tab'][ $i ]['content'] ) ? trim(wp_kses_post(wp_unslash($_POST['wb_tab'][ $i ]['content']))) : '';
 			$position = (int) isset( $_POST['wb_tab'][ $i ]['position'] ) ? sanitize_text_field(wp_unslash($_POST['wb_tab'][ $i ]['position'])) : 0;
-			$nickname = isset( $_POST['wb_tab'][ $i ]['nickname'] ) ? trim(sanitize_text_field(wp_unslash($_POST['wb_tab'][ $i ]['nickname']))) : ''; 
+			$nickname = isset( $_POST['wb_tab'][ $i ]['nickname'] ) ? trim(sanitize_text_field(wp_unslash($_POST['wb_tab'][ $i ]['nickname']))) : '';
+			$slug = isset( $_POST['wb_tab'][ $i ]['slug'] ) ? trim( sanitize_title( wp_unslash( $_POST['wb_tab'][ $i ]['slug'] ) ) ) : ''; 
 
 			if ( $title && $content ) {
 				$out[]=array(
 					'title'=>$title,
 					'content'=>$content,
 					'tab_type'=>'local',
-					'position'=>$position,
-					'nickname'=>$nickname,
+					'position' => $position,
+					'nickname' => $nickname,
+					'slug' => $slug,
 				);
 			} else {
 				break;
@@ -183,17 +186,17 @@ class Wb_Custom_Product_Tabs_For_Woocommerce_Admin {
 	}
 
 	/**
-	 *	@since 1.0.0
-	 *	Save product tab data to database
+	 * 	Save product tab data to database
+	 *	
+	 * 	@since 1.0.0
+	 *	
 	 */
-	public function process_product_meta($post_id, $post)
-	{
-		if(empty($post_id))
-		{
+	public function process_product_meta( $post_id, $post ) {
+		if ( empty( $post_id ) ) {
 			return;
 		}
 			
-		$product=wc_get_product($post_id);
+		$product = wc_get_product($post_id);
 		$sanitized_tab_data = $this->sanitize_tab_input();
 
 		// Now sanitize the tab data explicitly before updating the meta.
@@ -254,7 +257,9 @@ class Wb_Custom_Product_Tabs_For_Woocommerce_Admin {
 	            'show_ui' => true,
 	            'has_archive' => false,
 	            'taxonomies'   => $taxonomies,
-	            'show_in_menu' => 'edit.php?post_type=product'
+	            'show_in_menu' => 'edit.php?post_type=product',
+	            'capability_type' => 'product',
+				'map_meta_cap' => true,
 	        )
 	    );
 	}
@@ -265,6 +270,7 @@ class Wb_Custom_Product_Tabs_For_Woocommerce_Admin {
 	 *	@since 1.0.2
 	 * 	@since 1.1.0 	Added option to save nickname info.
 	 * 	@since 1.3.1 	Added option to save tab products.
+	 * 	@since 1.3.4 	Added option to save tab slug.
 	 */
 	public function save_meta_box_data($post_id)
 	{
@@ -279,6 +285,11 @@ class Wb_Custom_Product_Tabs_For_Woocommerce_Admin {
 			// Save the selected products.
 		    $selected_products = isset($_POST['_wb_tab_products']) ? array_map( 'absint', $_POST['_wb_tab_products'] ) : array();
 		    update_post_meta( $post_id, '_wb_tab_products', $selected_products );
+
+
+		    // Save tab slug.
+		    $tab_slug=isset( $_POST['wb_tab_tab_slug'] ) ? sanitize_title( wp_unslash( $_POST['wb_tab_tab_slug'] ) ) : '';
+		    update_post_meta( $post_id, '_wb_tab_slug', $tab_slug );
 		}
 	}
 	
@@ -317,8 +328,9 @@ class Wb_Custom_Product_Tabs_For_Woocommerce_Admin {
 	 */
 	public function _tab_other_info_meta_box_html( $post, $box )
 	{
-		$tab_position=Wb_Custom_Product_Tabs_For_Woocommerce::_get_global_tab_position($post->ID);
-		$tab_nickname=Wb_Custom_Product_Tabs_For_Woocommerce::_get_global_tab_nickname($post->ID);
+		$tab_position = Wb_Custom_Product_Tabs_For_Woocommerce::_get_global_tab_position($post->ID);
+		$tab_nickname = Wb_Custom_Product_Tabs_For_Woocommerce::_get_global_tab_nickname($post->ID);
+		$tab_slug = Wb_Custom_Product_Tabs_For_Woocommerce::_get_global_tab_slug($post->ID);
 		include WB_TAB_ROOT_PATH.'admin/views/_global_tab_metabox.php';
 	}
 
@@ -491,16 +503,16 @@ class Wb_Custom_Product_Tabs_For_Woocommerce_Admin {
 
 
 	/**
-	 * 	Add YouTube embed popup HTML
+	 * 	Add YouTube embed and tab edit popup HTML
 	 * 
 	 * 	@since 1.1.5
+	 * 	@since 1.3.4 Moved tab edit popup HTML to this method and renamed this method name.
 	 */
-	public function add_youtube_embed_popup()
+	public function add_youtube_embed_and_tab_edit_popup()
 	{
 		if(self::is_wb_tab_page() || self::is_product_edit_page())
 		{
 		?>
-			<div class="wb_tab_popup_overlay"></div>
 			<div class="wb_cptb_youtube_popup wb_tab_popup">
 				<div class="wb_tab_popup_hd">		
 					<span class="wb_tab_popup_hd_txt">
@@ -536,6 +548,69 @@ class Wb_Custom_Product_Tabs_For_Woocommerce_Admin {
 				</div>
 			</div>
 		<?php
+			if ( self::is_product_edit_page() ) {
+				?>
+				<div class="wb_tab_popup wb_cptb_tab_edit_popup">
+					<div class="wb_tab_popup_hd">		
+						<span class="wb_tab_popup_hd_txt">
+							<span class="dashicons dashicons-edit"></span>
+							<?php esc_html_e('Edit', 'wb-custom-product-tabs-for-woocommerce');?>
+						</span>
+						<span class="wb_tab_popup_close" title="<?php esc_attr_e('Close', 'wb-custom-product-tabs-for-woocommerce');?>">
+							<span class="dashicons dashicons-dismiss"></span>
+						</span>
+					</div>
+					<div class="wb_tab_popup_content">
+						<div class="wb_tab_panel_frmgrp" style="width:50%;">
+							<label><?php esc_html_e('Tab title', 'wb-custom-product-tabs-for-woocommerce');?><span class="woocommerce-help-tip" data-tip="<?php esc_attr_e('Title for tab', 'wb-custom-product-tabs-for-woocommerce'); ?>"></span></label>
+							<input type="text" name="wb_tab_title" class="wb_tabpanel_txt wb_tab_title_input" placeholder="<?php esc_attr_e('Title for tab', 'wb-custom-product-tabs-for-woocommerce'); ?>" value="">
+							<div class="wb_tab_er"></div>
+						</div>
+						<div class="wb_tab_panel_frmgrp" style="width:50%;">
+							<label><?php esc_html_e('Tab position', 'wb-custom-product-tabs-for-woocommerce');?><span class="woocommerce-help-tip" data-tip="<?php esc_attr_e('Tab position', 'wb-custom-product-tabs-for-woocommerce'); ?>"></span></label>
+							<input type="number" min="0" step="1" name="wb_tab_position" class="wb_tabpanel_txt wb_tab_position_input" placeholder="<?php esc_attr_e('Tab position', 'wb-custom-product-tabs-for-woocommerce'); ?>" value="" style="float:left; width:100px;">			
+							<div class="wb_tabpanel_hlp" style="margin-top:10px; margin-left:15px;">
+								<a href="https://webbuilder143.com/how-to-arrange-woocommerce-custom-product-tabs/?utm_source=plugin&utm_medium=product-edit&utm_campaign=tab-position&utm_content=positioning" target="_blank"><?php esc_html_e('Know more', 'wb-custom-product-tabs-for-woocommerce'); ?> <span class="dashicons dashicons-external" style="text-decoration:none;"></span></a>
+							</div>
+							<div class="wb_tab_er"></div>
+						</div>
+						<div class="wb_tab_panel_frmgrp">
+							<label><?php esc_html_e('Tab content', 'wb-custom-product-tabs-for-woocommerce');?><span class="woocommerce-help-tip" data-tip="<?php esc_attr_e('Content for tab', 'wb-custom-product-tabs-for-woocommerce'); ?>"></span></label>
+							<?php wp_editor('','wb_tab_editor',array(
+									'editor_class'=>'wb_tab_rte',
+									'editor_height'=>200,
+									'textarea_rows'=>6,
+									'tinymce' => array(
+								        'height' =>190,
+								    )
+								) 
+							); 
+							?>
+						</div>
+						<div class="wb_tab_panel_frmgrp">							
+							<div style="float:left; width:28%;">
+								<label><?php esc_html_e('Tab nickname', 'wb-custom-product-tabs-for-woocommerce');?><span class="woocommerce-help-tip" data-tip="<?php esc_attr_e('A unique nickname will be useful for identifying the tab', 'wb-custom-product-tabs-for-woocommerce'); ?>"></span></label>
+								<input type="text" name="wb_tab_nickname" class="wb_tabpanel_txt wb_tab_nickname_input" placeholder="<?php esc_attr_e('Tab nickname', 'wb-custom-product-tabs-for-woocommerce'); ?>" value="" style="float:left;">
+								<div class="wb_tab_er"></div>
+							</div>
+
+							<div style="float:left; width:44%;">
+								<label><?php esc_html_e('Tab slug', 'wb-custom-product-tabs-for-woocommerce');?><span class="woocommerce-help-tip" data-tip="<?php esc_attr_e('SEO friendly URL for tab. Allowed characters: letters, numbers, and hyphens only.', 'wb-custom-product-tabs-for-woocommerce'); ?>"></span></label>
+								<input type="text" name="wb_tab_slug" class="wb_tabpanel_txt wb_tab_slug_input" placeholder="<?php esc_attr_e('Tab slug', 'wb-custom-product-tabs-for-woocommerce'); ?>" value="" style="float:left;"> <a class="wb_cptb_slug_generate_btn"><?php esc_html_e('Generate tab slug from title.', 'wb-custom-product-tabs-for-woocommerce'); ?></a>
+								<div class="wb_tab_er"></div>
+							</div>
+
+							<div style="float:left; width:28%;">
+								<label>&nbsp;</label>
+								<button class="button button-primary wb_tab_done_btn wb_cptb_tab_save_btn" type="button"><?php esc_html_e('Done', 'wb-custom-product-tabs-for-woocommerce');?></button>
+								<button class="button button-secondary wb_tab_cancel_btn" type="button"><?php esc_html_e('Cancel', 'wb-custom-product-tabs-for-woocommerce');?></button>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="wb_tab_popup_overlay"></div>
+				<?php
+			}
 		}
 	}
 

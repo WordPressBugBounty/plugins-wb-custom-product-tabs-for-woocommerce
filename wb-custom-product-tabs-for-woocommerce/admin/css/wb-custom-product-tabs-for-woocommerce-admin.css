@@ -27,15 +27,9 @@ content: "\f510";}
 .wb_tab_panel_frmgrp{ float:left; width:100%; margin-bottom:10px; }
 .wb_tab_panel_frmgrp label{ float:left; font-weight:600; width:100%; color:#666; margin-bottom:1px; margin-top:1px; margin-left:0px !important; }
 .wb_tab_panel_frmgrp .wb-checkbox{ margin-top:8px; }
-.wb_tab_panel_frmgrp .wb_tabpanel_sele, .wb_tab_panel_frmgrp .wb_tabpanel_txt, .wb_tab_panel_frmgrp .wb_tabpanel_txtarea{ display: block; padding:0px 10px;
-font-size:.85rem;
-line-height:1.2;
-color: #495057;
-background-color: #fff;
-background-clip: padding-box;
-border:1px solid #8c8f94;
-min-height:32px; border-radius:5px;}
+.wb_tab_panel_frmgrp .wb_tabpanel_sele, .wb_tab_panel_frmgrp .wb_tabpanel_txt, .wb_tab_panel_frmgrp .wb_tabpanel_txtarea{ display: block; padding:0px 10px; font-size:.85rem; line-height:1.2; color: #495057; background-color: #fff; background-clip: padding-box; border:1px solid #8c8f94; min-height:32px; border-radius:5px;}
 .wb_tab_panel_frmgrp .wb_tabpanel_txtarea{ height:200px; padding:10px 10px; resize:none; }
+.wb_tab_panel_frmgrp .wb_tabpanel_txt::placeholder{ color:#ccc; }
 .wb_tabpanel_hlp{ float:left; font-size:12px; font-style:italic; color:#666; }
 
 .wb_tab_popup_overlay{ position:fixed; z-index:20000; width:100%; height:100%; background-color:rgba(214, 214, 214, 0.9); left:0px; top:0px; display:none;}
@@ -51,3 +45,4 @@ min-height:32px; border-radius:5px;}
 .wb_tab_metabox_container label.wb_tab_form_label{ display:inline-block; width:100%; margin-top:15px; margin-bottom:5px;  font-size:13px; font-weight:600; color:#23282d;}
 
 .wb_tab_popup.wb_cptb_youtube_popup{ width:350px; height:230px; left:50%; top:0%; margin-left:0px; margin-top:158px; z-index:20200; }
+.wb_cptb_slug_generate_btn{ cursor:pointer; text-decoration:underline; margin-left:5px; margin-top:5px; display:inline-block; }
