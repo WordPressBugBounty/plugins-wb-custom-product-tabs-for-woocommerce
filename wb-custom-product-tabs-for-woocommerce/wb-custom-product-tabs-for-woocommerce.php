@@ -11,7 +11,7 @@
  * Requires Plugins:        woocommerce
  * Plugin URI:        		https://wordpress.org/plugins/wb-custom-product-tab-for-wooCommerce/
  * Description:       		Create your own product tabs and assign it to your WooCommerce products 
- * Version:           		1.3.4
+ * Version:           		1.3.5
  * WC requires at least:	5.0.0
  * WC tested up to: 		9.7
  * Author:            		Web Builder 143
@@ -32,7 +32,7 @@ if ( ! defined( 'WPINC' ) ) {
  * Start at version 1.0.0 and use SemVer - https://semver.org
  * Rename this for your plugin and update it as you release new versions.
  */
-define( 'WB_CUSTOM_PRODUCT_TABS_FOR_WOOCOMMERCE_VERSION', '1.3.4' );
+define( 'WB_CUSTOM_PRODUCT_TABS_FOR_WOOCOMMERCE_VERSION', '1.3.5' );
 define ('WB_TAB_PLUGIN_FILENAME', __FILE__);
 define( 'WB_TAB_ROOT_PATH', plugin_dir_path( __FILE__) );
 define( 'WB_TAB_ROOT_URL', plugin_dir_url( __FILE__) );

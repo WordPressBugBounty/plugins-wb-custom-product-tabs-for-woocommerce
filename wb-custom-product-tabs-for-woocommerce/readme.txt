@@ -5,7 +5,7 @@ Tags: product tabs, tab manager, woocommerce custom tabs, woocommerce product ta
 Requires at least: 3.5.0
 Tested up to: 6.7
 Requires PHP: 5.6
-Stable tag: 1.3.4
+Stable tag: 1.3.5
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -79,6 +79,21 @@ Most of the time, we try to reply within the same day or the next day. Please ch
 http://www.youtube.com/watch?v=F90dOxEjkE8
 
 
+== Installation ==
+
+= Via WordPress Dashboard =
+
+1. Go to the Plugins menu and click Add New.
+2. Search for **Custom Product Tabs for WooCommerce** (or upload the plugin ZIP)
+3. Click **Install Now**, then **Activate**
+
+= Via FTP =
+
+1. Extract the wb-custom-product-tabs-for-woocommerce.zip file on your computer.
+2. Upload the extracted wb-custom-product-tabs-for-woocommerce folder to the /wp-content/plugins/ directory on your server.
+3. Go to the Plugins menu in WordPress and activate the plugin.
+
+
 == Frequently Asked Questions ==
 
 = Where can I add tabs to a product? =
@@ -134,6 +149,9 @@ For a detailed guide on translating WooCommerce product tabs using Polylang, ple
 6. Help & FAQs
 
 == Changelog ==
+
+= 1.3.5 =
+* [Fix] Undefined array key 'slug' issue. Thanks @elasaleta for pointing out the issue.
 
 = 1.3.4 =
 * [Fix] Tab content validation failed in the editor's text view. Thanks to Richard for pointing out the issue.
@@ -298,7 +316,5 @@ For a detailed guide on translating WooCommerce product tabs using Polylang, ple
 
 == Upgrade Notice ==
 
-= 1.3.4 =
-* [Fix] Tab content validation failed in the editor's text view. Thanks to Richard for pointing out the issue.
-* [Fix] Tab edit popup was hidden under the overlay in certain conditions. Thanks to Cheryl for helping us replicate and fix the issue.
-* [Add] Option to add an SEO-friendly slug for tab URLs.
+= 1.3.5 =
+* [Fix] Undefined array key 'slug' issue. Thanks @elasaleta for pointing out the issue.

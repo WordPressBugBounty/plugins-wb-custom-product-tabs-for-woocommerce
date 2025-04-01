@@ -105,7 +105,7 @@ class Wb_Custom_Product_Tabs_For_Woocommerce_Public {
 				// Filter to alter tab content.
 				$tab_data = apply_filters('wb_cptb_alter_tab_content', $tab_data, $product);
 
-				$slug = $tab_data['slug'];
+				$slug = isset( $tab_data['slug'] ) ? $tab_data['slug'] : '';
 
 				if ( "" !== $slug ) { // Check for duplicates.
 					$original_slug = $slug;
