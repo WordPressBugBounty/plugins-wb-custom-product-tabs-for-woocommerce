@@ -3,9 +3,9 @@ Contributors: webbuilder143
 Donate link: https://webbuilder143.com/support-our-work/?utm_source=wordpressorg&utm_medium=readme&utm_campaign=donate-link&utm_id=tabs-plugin&utm_content=donate
 Tags: product tabs, tab manager, woocommerce custom tabs, woocommerce product tabs, tabs plugin
 Requires at least: 3.5.0
-Tested up to: 6.7
+Tested up to: 6.8
 Requires PHP: 5.6
-Stable tag: 1.3.5
+Stable tag: 1.4.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -22,9 +22,7 @@ Enhance your WooCommerce product pages today with Custom Product Tabs for WooCom
 <pre>
 Some users have requested a way to migrate tabs from their <a href="https://wordpress.org/plugins/yikes-inc-easy-custom-woocommerce-product-tabs/" rel="ugc">old plugin</a> to ours.
 To assist with this, we have developed a migrator plugin.
-If you need this plugin, please contact us through the <a href="https://webbuilder143.com/" rel="nofollow ugc">contact form</a> on our website.
-
-Most of the time, we try to reply within the same day or the next day. Please check your inbox and spam folder for our response.
+If you need it, please vist <a href="https://webbuilder143.com/migrate-woocommerce-product-tabs/?utm_source=wordpressorg&utm_medium=readme&utm_campaign=migrator-page-link&utm_id=tabs-plugin&utm_content=migrator-plugin" rel="nofollow ugc">this</a> page.
 </pre>
 
 == Features ==
@@ -149,6 +147,11 @@ For a detailed guide on translating WooCommerce product tabs using Polylang, ple
 6. Help & FAQs
 
 == Changelog ==
+
+= 1.4.0 =
+* [Improvement] Compatibility with WooCommerce default brands.
+* Tested with WP 6.8
+* Tested with WC 9.8
 
 = 1.3.5 =
 * [Fix] Undefined array key 'slug' issue. Thanks @elasaleta for pointing out the issue.
@@ -316,5 +319,7 @@ For a detailed guide on translating WooCommerce product tabs using Polylang, ple
 
 == Upgrade Notice ==
 
-= 1.3.5 =
-* [Fix] Undefined array key 'slug' issue. Thanks @elasaleta for pointing out the issue.
+= 1.4.0 =
+* [Improvement] Compatibility with WooCommerce default brands.
+* Tested with WP 6.8
+* Tested with WC 9.8

@@ -213,7 +213,7 @@ class Wb_Custom_Product_Tabs_For_Woocommerce_Admin {
 	 */
 	public function register_global_tabs()
 	{
-		$taxonomies = array( 'product_cat',  'product_tag' );
+		$taxonomies = array( 'product_cat',  'product_tag', 'product_brand' );
 
 		// Add compatibility for thirdparty brand plugins.
 	    $brand_taxonamies = Wb_Custom_Product_Tabs_For_Woocommerce::_get_thirdparty_brand_taxonamies();
@@ -317,6 +317,15 @@ class Wb_Custom_Product_Tabs_For_Woocommerce_Admin {
 			array($this, '_tab_products_meta_box_html'),
 			WB_TAB_POST_TYPE,
 			'side',
+			'default'
+        );
+
+        add_meta_box(
+			'wb_tab_products_meta_box',
+			__('Our other free plugins', 'wb-custom-product-tabs-for-woocommerce'), 
+			array($this, '_other_free_plugins_meta_box_html'),
+			WB_TAB_POST_TYPE,
+			'normal',
 			'default'
         );
 	}
@@ -1008,5 +1017,224 @@ class Wb_Custom_Product_Tabs_For_Woocommerce_Admin {
 	public function _tab_products_meta_box_html( $post, $box ) {
 		$tab_products = Wb_Custom_Product_Tabs_For_Woocommerce::_get_global_tab_products( $post->ID );
 		include WB_TAB_ROOT_PATH.'admin/views/_global_tab_products_metabox.php';
+	}
+
+
+	/**
+	 * 	Show review banner.
+	 * 
+	 * 	@since 1.4.0
+	 */
+	public function review_banner() {
+
+		// Check if the current screen is allowed to show the review banner.
+		$screen = get_current_screen();
+    	if ( ! $screen ) { return; }
+
+    	$allowed_screens = array(
+	        'edit-product',             // Products list
+	        'product',                  // Product edit or add
+	        'edit-product_cat',         // Product categories
+	        'edit-product_tag',         // Product tags
+	        'edit-pa_brand',            // Brands (assuming custom taxonomy `pa_brand`)
+	        'edit-product_brand',       // Brands (if using plugin like Perfect Brands)
+	        'edit-product_attribute',   // Product attributes (taxonomy, not actual WC attribute management)
+	        'edit-shop_order',          // Orders list
+	        'shop_order',               // Order edit screen
+	        'edit-shop_coupon',         // Coupons list
+	        'shop_coupon',              // Coupon edit screen
+	        'product_page_product_attributes', // WC attributes management screen
+	        'wb-custom-tabs', // Global tabs Add/Edit.
+	        'edit-wb-custom-tabs', // Global tabs listing.
+	    );
+
+	    if ( ! in_array( $screen->id, $allowed_screens ) ) {
+	    	return;
+	    }
+
+		$banner_state = get_option( 'wb_cptb_review_banner_state', false );
+		$is_show_banner = false;
+
+		if( false === $banner_state ) { // First time.
+			if($this->is_tab_count_reached()){
+				$is_show_banner = true;
+				update_option( 'wb_cptb_review_banner_state', 1 );
+			}
+		}else{
+			if ( 1 === (int) $banner_state ) { //Show now.
+				$is_show_banner = true;
+			}elseif( 3 === (int) $banner_state ) { // Remind.
+				
+				$banner_remind_start = (int) get_option( 'wb_cptb_review_banner_remind_start', 0 );
+				$two_week_before = time() - 1209600; // After two weeks.
+				if ( 0 < $banner_remind_start && $two_week_before > $banner_remind_start ) {
+					$is_show_banner = true;
+				}
+			}
+		}
+
+		if ( $is_show_banner ) {
+			?>
+			<div class="notice notice-success wb-tabs-review-notice">
+		        <p><strong>🎉 Amazing! You've created more than 50 product tabs using Custom Product Tabs for WooCommerce.</strong></p>
+		        <p>
+		            We're excited to see you're getting great value from the plugin. If it's improved your workflow, we'd really appreciate it if you could leave us a quick 5-star review. It only takes a moment, and your support helps us continue improving the plugin and offering excellent support.
+		        </p>
+		        <p>Your feedback matters — and it helps others discover the plugin too!</p>
+		        <p>
+		            <a href="https://wordpress.org/support/plugin/wb-custom-product-tabs-for-woocommerce/reviews/?filter=5#new-post" target="_blank" class="button button-primary wb-cptb-tabs-review-action" data-action="review_now">
+		                Yes! I'll leave a 5-star review ⭐⭐⭐⭐⭐
+		            </a>
+		            <a class="button button-secondary wb-cptb-tabs-review-action" data-action="already_reviewed">
+		                I've already left a review
+		            </a>
+		            <a class="button button-secondary wb-cptb-tabs-review-action" data-action="remind_later">
+		                Remind me after 2 weeks
+		            </a>
+		            <a class="button button-secondary wb-cptb-tabs-review-action" data-action="not_satisfied">
+		                I'm not satisfied with the plugin
+		            </a>
+		        </p>
+		    </div>
+			<style>
+				.wb-tabs-review-notice .button { margin-right: 10px; margin-top: 5px; }
+			</style>
+		    <script type="text/javascript">
+		        (function($){
+		            $('.wb-cptb-tabs-review-action').on('click', function(e){
+		                
+		                let review_action = $(this).data('action');
+
+		                // Hide the notice.
+		                $('.wb-tabs-review-notice').fadeOut();
+
+		                $.ajax({
+							type: 'POST',
+							dataType:'json',
+							url: '<?php echo esc_url( admin_url('admin-ajax.php') ); ?>',
+							data:{
+								action: 'wb_tabs_review_banner_dismiss',
+			                    review_action: review_action,
+			                    _nonce: '<?php echo wp_create_nonce('wb_tabs_review_dismiss_nonce'); ?>',
+		                	},
+							success:function(data){
+								if ( ! data.status ) {
+									let currentUrl = new URL( window.location.href );
+					                currentUrl.searchParams.set('wb_cptb_review_action', review_action);
+					                window.location.href = currentUrl.toString();
+								}
+							},
+							error:function(){
+								let currentUrl = new URL( window.location.href );
+				                currentUrl.searchParams.set('wb_cptb_review_action', review_action);
+				                window.location.href = currentUrl.toString();
+							}
+		                });
+		            });
+		        })(jQuery);
+		    </script>
+			<?php
+		}
+	}
+
+	/**
+	 *  Ajax review banner action.
+	 * 	Called when the user clicks the review banner buttons.
+	 * 
+	 * 	@since 1.4.0
+	 */
+	public function review_banner_ajax() {
+		$nonce = isset($_POST['_nonce']) ? sanitize_text_field( wp_unslash($_POST['_nonce']) ) : '';
+		if ( wp_verify_nonce( $nonce, 'wb_tabs_review_dismiss_nonce') ) {
+			$review_action = isset($_POST['review_action']) ? sanitize_text_field( wp_unslash($_POST['review_action']) ) : '';
+			$this->set_review_banner_state( $review_action );
+			wp_send_json(array('status'=>true));
+		}
+
+		wp_send_json(array('status'=>false));
+	}
+
+	/**
+	 *  Non-ajax review banner action.
+	 * 	This will be called when ajax fails due to nonce expiration etc.
+	 * 
+	 * 	@since 1.4.0
+	 */
+	public function review_banner_non_ajax() {
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$review_action = isset($_GET['wb_cptb_review_action']) ? sanitize_text_field( wp_unslash( $_GET['wb_cptb_review_action'] ) ) : '';
+		$this->set_review_banner_state( $review_action );
+	}
+
+	/**
+	 *  Set review banner state based on the action.
+	 * 
+	 * 	@since 1.4.0
+	 * 	@param string $review_action Review action.
+	 */
+	private function set_review_banner_state( $review_action ) {
+		switch ($review_action) {
+			case 'review_now':
+			case 'already_reviewed':
+			case 'not_satisfied':
+				update_option( 'wb_cptb_review_banner_state', 2 ); // Set status 2, means don't show again.
+				break;
+			case 'remind_later':
+				update_option( 'wb_cptb_review_banner_state', 3 );
+				update_option( 'wb_cptb_review_banner_remind_start', time() ); // Set current time as start time.
+				break;
+			default:				
+				break;
+		}
+	}
+
+	/**
+	 *  Is the minimum tab count reached to show review banner.
+	 * 	
+	 * 	@since 1.4.0
+	 * 	@return bool
+	 */
+	private function is_tab_count_reached() {
+		
+		global $wpdb;
+		
+		$local_total = $wpdb->get_var( $wpdb->prepare( "
+		    SELECT SUM(
+		        CASE 
+		            WHEN meta_value LIKE 'a:%%:{%%' 
+		                THEN CAST(SUBSTRING_INDEX(SUBSTRING_INDEX(meta_value, ':', 2), ':', -1) AS UNSIGNED)
+		            ELSE 0
+		        END
+		    ) AS total_count
+		    FROM {$wpdb->postmeta}
+		    WHERE meta_key = %s
+		", 'wb_custom_tabs' ) );
+
+		$count = wp_count_posts( 'wb-custom-tabs' );
+		$global_total = isset( $count->publish ) ? $count->publish : 0;
+
+		$total = $local_total + $global_total;
+
+		return ( 50 <= $total );
+	}
+
+	/**
+	 *	Metabox HTML to show other plugins promotion. 
+	 */
+	public function _other_free_plugins_meta_box_html(){
+		?>
+		<p>
+			<h3>Add desktop-style sticky notes to your WordPress dashboard!</h3>
+			Create draggable, resizable notes with customizable colors and fonts. <br />
+			Limit notes to specific pages, archive old ones, and stay organized with ease. <br /><br />
+			<a class="button button-primary" target="_blank" href="https://wordpress.org/plugins/wb-sticky-notes/">Click here to download now!</a>
+		</p>
+		<br />
+		<p>
+			<h3>Need to log and manage your WordPress emails right from your dashboard?</h3>
+			Here's the perfect solution — view all sent emails, access attachments, and even resend them with a click.<br /><br />
+			<a class="button button-primary" target="_blank" href="https://wordpress.org/plugins/wb-mail-logger/">Click here to download now!</a>
+		</p>
+		<?php
 	}
 }

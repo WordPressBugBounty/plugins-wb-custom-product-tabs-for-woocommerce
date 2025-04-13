@@ -70,7 +70,7 @@ class Wb_Custom_Product_Tabs_For_Woocommerce {
 		if ( defined( 'WB_CUSTOM_PRODUCT_TABS_FOR_WOOCOMMERCE_VERSION' ) ) {
 			$this->version = WB_CUSTOM_PRODUCT_TABS_FOR_WOOCOMMERCE_VERSION;
 		} else {
-			$this->version = '1.3.5';
+			$this->version = '1.4.0';
 		}
 		$this->plugin_name = 'wb-custom-product-tabs-for-woocommerce';
 
@@ -259,7 +259,7 @@ class Wb_Custom_Product_Tabs_For_Woocommerce {
 		* 	
 		* @since 1.3.0
 		*/
-		$this->loader->add_filter( 'admin_init', $plugin_admin, 'register_settings', 11 );
+		$this->loader->add_action( 'admin_init', $plugin_admin, 'register_settings', 11 );
 
 		/**
 		* General settings menu.
@@ -267,6 +267,16 @@ class Wb_Custom_Product_Tabs_For_Woocommerce {
 		* @since 1.3.0
 		*/
 		$this->loader->add_filter( 'admin_menu', $plugin_admin, 'settings_menu', 11 );
+
+
+		/**
+		* Review seeking banner.
+		* 	
+		* @since 1.4.0
+		*/
+		$this->loader->add_action( 'admin_notices', $plugin_admin, 'review_banner', 10 );
+		$this->loader->add_action( 'wp_ajax_wb_tabs_review_banner_dismiss', $plugin_admin, 'review_banner_ajax', 10 );
+		$this->loader->add_action( 'admin_init', $plugin_admin, 'review_banner_non_ajax', 10 );
 	}
 
 	/**
@@ -434,6 +444,9 @@ class Wb_Custom_Product_Tabs_For_Woocommerce {
 		/* Taking tags */
 		$tag_id_arr=self::_get_product_term_ids($product_id, 'product_tag');
 
+		/* Taking brands */
+		$brand_id_arr=self::_get_product_brand_ids($product_id);
+
 		$tax_query = array(
 			'relation'=>'OR',
 	        array(
@@ -447,6 +460,12 @@ class Wb_Custom_Product_Tabs_For_Woocommerce {
 	            'field'=>'ID',
 	            'terms'=>$tag_id_arr,
 	        ),
+	        array(
+	            'taxonomy'=>'product_brand',
+	            'field'=>'ID',
+	            'terms'=>$brand_id_arr,
+	            'include_children' => apply_filters('wb_cptb_include_child_brand_tabs', false),
+	        ),
 	    );
 
 		$tax_query_not_exists = array(
@@ -457,6 +476,10 @@ class Wb_Custom_Product_Tabs_For_Woocommerce {
 	        ),
 	        array(
 	            'taxonomy'=>'product_tag',
+	            'operator' => 'NOT EXISTS',
+	        ),
+	        array(
+	            'taxonomy'=>'product_brand',
 	            'operator' => 'NOT EXISTS',
 	        ),
 	    );
@@ -681,5 +704,42 @@ class Wb_Custom_Product_Tabs_For_Woocommerce {
 	public static function _get_global_tab_products( $id ) {
 		$products = get_post_meta( $id, '_wb_tab_products', true );
 		return is_array( $products ) ? $products :  array();
+	}
+
+
+	/**
+	 * Get product brand IDs array
+	 *
+	 * @since     1.4.0
+	 * @param     int 	   	product id
+	 * @return    int[]    	brand IDs array
+	 */
+	private static function _get_product_brand_ids( $product_id ) {
+		$brand_ids = array();
+		if ( apply_filters('wb_cptb_include_parent_brand_tabs', true) ) {
+			$brand_ids = self::_get_product_all_brand_ids( $product_id );
+		} else {
+			$brand_ids = wc_get_product_term_ids( $product_id, 'product_brand' );
+		}
+
+		return $brand_ids;
+	}
+
+
+	/**
+	 * Get all product brands for a product by ID, including hierarchy
+	 *
+	 * @since  1.4.0
+	 * @param  int $product_id Product ID.
+	 * @return array
+	 */
+	private static function _get_product_all_brand_ids( $product_id ) {
+		$product_brands = wc_get_product_term_ids( $product_id, 'product_brand' );
+
+		foreach ( $product_brands as $product_brand ) {
+			$product_brands = array_merge( $product_brands, get_ancestors( $product_brand, 'product_brand' ) );
+		}
+
+		return $product_brands;
 	}
 }

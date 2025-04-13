@@ -90,10 +90,14 @@ class Wb_Custom_Product_Tabs_For_Woocommerce_Public {
 			return $tabs;
 		}
 
+		if ( ! is_array( $tabs ) ) {
+		    $tabs = array();
+		}
+
 		$post_backup = $post;
 		$wb_tabs=Wb_Custom_Product_Tabs_For_Woocommerce::get_product_tabs($product);
 		$post = $post_backup;
-		$wb_tabs=apply_filters('wb_cptb_alter_tabs', $wb_tabs, $product);
+		$wb_tabs = apply_filters('wb_cptb_alter_tabs', $wb_tabs, $product);
 
 		$wb_inc=0;
 		foreach($wb_tabs as $key=>$tab_data)
@@ -132,6 +136,7 @@ class Wb_Custom_Product_Tabs_For_Woocommerce_Public {
 				);
 			}
 		}
+		
 		return $tabs;
 	}
 
