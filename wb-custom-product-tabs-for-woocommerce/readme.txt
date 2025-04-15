@@ -5,7 +5,7 @@ Tags: product tabs, tab manager, woocommerce custom tabs, woocommerce product ta
 Requires at least: 3.5.0
 Tested up to: 6.8
 Requires PHP: 5.6
-Stable tag: 1.4.0
+Stable tag: 1.4.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -147,6 +147,9 @@ For a detailed guide on translating WooCommerce product tabs using Polylang, ple
 6. Help & FAQs
 
 == Changelog ==
+
+= 1.4.1 =
+* [Fix] Product selection metabox is missing on the Global Tabs edit page.
 
 = 1.4.0 =
 * [Improvement] Compatibility with WooCommerce default brands.
@@ -319,7 +322,5 @@ For a detailed guide on translating WooCommerce product tabs using Polylang, ple
 
 == Upgrade Notice ==
 
-= 1.4.0 =
-* [Improvement] Compatibility with WooCommerce default brands.
-* Tested with WP 6.8
-* Tested with WC 9.8
+= 1.4.1 =
+* [Fix] Product selection metabox is missing on the Global Tabs edit page.

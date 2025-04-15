@@ -321,7 +321,7 @@ class Wb_Custom_Product_Tabs_For_Woocommerce_Admin {
         );
 
         add_meta_box(
-			'wb_tab_products_meta_box',
+			'wb_tab_other_free_plugins_meta_box',
 			__('Our other free plugins', 'wb-custom-product-tabs-for-woocommerce'), 
 			array($this, '_other_free_plugins_meta_box_html'),
 			WB_TAB_POST_TYPE,
