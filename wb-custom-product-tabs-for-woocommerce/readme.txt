@@ -5,7 +5,7 @@ Tags: product tabs, tab manager, woocommerce custom tabs, woocommerce product ta
 Requires at least: 3.5.0
 Tested up to: 6.8
 Requires PHP: 5.6
-Stable tag: 1.4.1
+Stable tag: 1.4.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -19,11 +19,6 @@ This plugin is perfect for store owners who want to provide customers with detai
 
 Enhance your WooCommerce product pages today with Custom Product Tabs for WooCommerce!
 
-<pre>
-Some users have requested a way to migrate tabs from their <a href="https://wordpress.org/plugins/yikes-inc-easy-custom-woocommerce-product-tabs/" rel="ugc">old plugin</a> to ours.
-To assist with this, we have developed a migrator plugin.
-If you need it, please vist <a href="https://webbuilder143.com/migrate-woocommerce-product-tabs/?utm_source=wordpressorg&utm_medium=readme&utm_campaign=migrator-page-link&utm_id=tabs-plugin&utm_content=migrator-plugin" rel="nofollow ugc">this</a> page.
-</pre>
 
 == Features ==
 
@@ -147,6 +142,9 @@ For a detailed guide on translating WooCommerce product tabs using Polylang, ple
 6. Help & FAQs
 
 == Changelog ==
+
+= 1.4.2 =
+* [Fix] Global tabs assigned via categories, tags, or brands were limited to a maximum of 10. Now displaying all matching tabs. @RibbonVilla Thanks for pointing out the issue.
 
 = 1.4.1 =
 * [Fix] Product selection metabox is missing on the Global Tabs edit page.
@@ -322,5 +320,5 @@ For a detailed guide on translating WooCommerce product tabs using Polylang, ple
 
 == Upgrade Notice ==
 
-= 1.4.1 =
-* [Fix] Product selection metabox is missing on the Global Tabs edit page.
+= 1.4.2 =
+* [Fix] Global tabs assigned via categories, tags, or brands were limited to a maximum of 10. Now displaying all matching tabs. @RibbonVilla Thanks for pointing out the issue.

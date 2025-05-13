@@ -70,7 +70,7 @@ class Wb_Custom_Product_Tabs_For_Woocommerce {
 		if ( defined( 'WB_CUSTOM_PRODUCT_TABS_FOR_WOOCOMMERCE_VERSION' ) ) {
 			$this->version = WB_CUSTOM_PRODUCT_TABS_FOR_WOOCOMMERCE_VERSION;
 		} else {
-			$this->version = '1.4.1';
+			$this->version = '1.4.2';
 		}
 		$this->plugin_name = 'wb-custom-product-tabs-for-woocommerce';
 
@@ -406,6 +406,7 @@ class Wb_Custom_Product_Tabs_For_Woocommerce {
 		/* Taking global tabs assigned via products. */
 		$query = new WP_Query( array(
 	        'post_type' => WB_TAB_POST_TYPE,
+	        'posts_per_page' => -1,
 	        'meta_query' => array(
 	            array(
 	                'key' => '_wb_tab_products',
@@ -515,6 +516,7 @@ class Wb_Custom_Product_Tabs_For_Woocommerce {
 		$query = new WP_Query(
 			array(
 				'post_type' => WB_TAB_POST_TYPE,
+				'posts_per_page' => -1,
 				'tax_query' => $tax_query, // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query
 			)
 		 );
@@ -548,6 +550,7 @@ class Wb_Custom_Product_Tabs_For_Woocommerce {
 			$query_not_exists = new WP_Query(
 				array(
 					'post_type' => WB_TAB_POST_TYPE,
+					'posts_per_page' => -1,
 					'tax_query' => $tax_query_not_exists, // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query
 				)
 			);
