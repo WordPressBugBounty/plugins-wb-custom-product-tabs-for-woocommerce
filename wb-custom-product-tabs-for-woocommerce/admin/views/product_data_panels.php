@@ -66,6 +66,7 @@ if (!defined('ABSPATH')) {
 					$key=0;
 					$is_hidden_global_tab = false;
 					$tab_edit_url = '';
+					$tab_slug = '';
 
 					include "_tab_single.php";
 					?>

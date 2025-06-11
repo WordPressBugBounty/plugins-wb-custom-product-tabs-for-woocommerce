@@ -70,7 +70,7 @@ class Wb_Custom_Product_Tabs_For_Woocommerce {
 		if ( defined( 'WB_CUSTOM_PRODUCT_TABS_FOR_WOOCOMMERCE_VERSION' ) ) {
 			$this->version = WB_CUSTOM_PRODUCT_TABS_FOR_WOOCOMMERCE_VERSION;
 		} else {
-			$this->version = '1.4.2';
+			$this->version = '1.4.3';
 		}
 		$this->plugin_name = 'wb-custom-product-tabs-for-woocommerce';
 

@@ -5,7 +5,7 @@ Tags: product tabs, tab manager, woocommerce custom tabs, woocommerce product ta
 Requires at least: 3.5.0
 Tested up to: 6.8
 Requires PHP: 5.6
-Stable tag: 1.4.2
+Stable tag: 1.4.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -142,6 +142,10 @@ For a detailed guide on translating WooCommerce product tabs using Polylang, ple
 6. Help & FAQs
 
 == Changelog ==
+
+= 1.4.3 =
+* [Fix] Undefined variable `$tab_slug` @stefan1904 Thanks for pointing out the issue.
+* Tested with WC 9.9
 
 = 1.4.2 =
 * [Fix] Global tabs assigned via categories, tags, or brands were limited to a maximum of 10. Now displaying all matching tabs. @RibbonVilla Thanks for pointing out the issue.
@@ -320,5 +324,6 @@ For a detailed guide on translating WooCommerce product tabs using Polylang, ple
 
 == Upgrade Notice ==
 
-= 1.4.2 =
-* [Fix] Global tabs assigned via categories, tags, or brands were limited to a maximum of 10. Now displaying all matching tabs. @RibbonVilla Thanks for pointing out the issue.
+= 1.4.3 =
+* [Fix] Undefined variable `$tab_slug` @stefan1904 Thanks for pointing out the issue.
+* Tested with WC 9.9
