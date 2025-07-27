@@ -1,11 +1,11 @@
 === Custom Product tabs for WooCommerce ===
 Contributors: webbuilder143
-Donate link: https://webbuilder143.com/support-our-work/?utm_source=wordpressorg&utm_medium=readme&utm_campaign=donate-link&utm_id=tabs-plugin&utm_content=donate
+Donate link: https://webbuilder143.com/?utm_source=wordpressorg&utm_medium=readme&utm_campaign=donate-link&utm_id=tabs-plugin&utm_content=donate
 Tags: product tabs, tab manager, woocommerce custom tabs, woocommerce product tabs, tabs plugin
 Requires at least: 3.5.0
 Tested up to: 6.8
 Requires PHP: 5.6
-Stable tag: 1.4.3
+Stable tag: 1.5.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -33,6 +33,10 @@ Enhance your WooCommerce product pages today with Custom Product Tabs for WooCom
 ✅ Tab slug – SEO friendly tab slug.
 ✅ Developer-Friendly Hooks – Includes multiple hooks for customization and integration with third-party plugins.
 
+
+== 💬 Help Us Translate! ==
+
+Want to see this plugin in your language? [Contribute a translation](https://translate.wordpress.org/projects/wp-plugins/wb-custom-product-tabs-for-woocommerce/) and become a proud WordPress translation contributor. Your support makes a difference!
 
 
 == How to Use ==
@@ -142,6 +146,11 @@ For a detailed guide on translating WooCommerce product tabs using Polylang, ple
 6. Help & FAQs
 
 == Changelog ==
+
+= 1.5.0 =
+* [Improvement] Added compatibility with WPML. Thanks to @rainelement for your valuable contribution.
+* [Improvement] Improved compatibility with WordPress block code.
+* Tested with WC 10.0.4
 
 = 1.4.3 =
 * [Fix] Undefined variable `$tab_slug` @stefan1904 Thanks for pointing out the issue.
@@ -324,6 +333,7 @@ For a detailed guide on translating WooCommerce product tabs using Polylang, ple
 
 == Upgrade Notice ==
 
-= 1.4.3 =
-* [Fix] Undefined variable `$tab_slug` @stefan1904 Thanks for pointing out the issue.
-* Tested with WC 9.9
+= 1.5.0 =
+* [Improvement] Added compatibility with WPML. Thanks to @rainelement for your valuable contribution.
+* [Improvement] Improved compatibility with WordPress block code.
+* Tested with WC 10.0.4

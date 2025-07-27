@@ -30,7 +30,5 @@ class Wb_Custom_Product_Tabs_For_Woocommerce_Activator {
 	 * @since    1.0.0
 	 */
 	public static function activate() {
-        
 	}
-
 }
