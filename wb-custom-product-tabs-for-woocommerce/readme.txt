@@ -5,17 +5,17 @@ Tags: product tabs, tab manager, woocommerce custom tabs, woocommerce product ta
 Requires at least: 3.5.0
 Tested up to: 6.8
 Requires PHP: 5.6
-Stable tag: 1.5.0
+Stable tag: 1.5.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Add unlimited custom tabs to WooCommerce products and assign them by category, tag, brand, or product. Supports sorting, YouTube embed, and shortcode.  
+Add unlimited additional tabs to WooCommerce products and assign them by category, tag, brand, or product. Supports sorting, shortcode etc.  
 
 == Description ==
 
-Need a customized tab for your WooCommerce products? The Custom Product Tabs for WooCommerce plugin lets you effortlessly add an unlimited number of tabs to your product pages, helping you display additional product information in a structured way.
+Need a customized tab for your WooCommerce products? The Custom Product Tabs for WooCommerce plugin lets you effortlessly add an unlimited number of tabs to your product pages.
 
-This plugin is perfect for store owners who want to provide customers with detailed product information in an organized and user-friendly manner.
+You don't need to add tabs to every product manually. Instead, you can use global tabs and assign them to products based on Category, Tags, Brands, or individual products. Additionally, there's also an option to create product-specific tabs if needed.
 
 Enhance your WooCommerce product pages today with Custom Product Tabs for WooCommerce!
 
@@ -26,11 +26,11 @@ Enhance your WooCommerce product pages today with Custom Product Tabs for WooCom
 ✅ Global Tabs – Create tabs that can be assigned to multiple products based on categories, tags, and WooCommerce brands.
 ✅ Brand-Specific Tabs – Fully supports WooCommerce's default brand functionality and third-party brand plugins like [Perfect Brands for WooCommerce](https://wordpress.org/plugins/perfect-woocommerce-brands/).
 ✅ YouTube Embed Support – Easily embed YouTube videos directly within product tabs.
-✅ Sortable Tabs – Organize tabs with a custom order input field for better content arrangement.
+✅ Sortable Tabs – Organize tabs with a priority input field for better content arrangement.
 ✅ Multi-Language Support – Compatible with WPML and Polylang for multilingual stores.
 ✅ Rich Content Support – Add extra product images, detailed descriptions, videos, FAQs, and more.
 ✅ Shortcode Compatibility – Use WordPress shortcodes to insert dynamic content into tabs.
-✅ Tab slug – SEO friendly tab slug.
+✅ Tab slug – SEO friendly tab slug. Create specific URL for each tab. Easy to share tab content.
 ✅ Developer-Friendly Hooks – Includes multiple hooks for customization and integration with third-party plugins.
 
 
@@ -146,6 +146,9 @@ For a detailed guide on translating WooCommerce product tabs using Polylang, ple
 6. Help & FAQs
 
 == Changelog ==
+
+= 1.5.1 =
+* Tested with WC 10.1.1
 
 = 1.5.0 =
 * [Improvement] Added compatibility with WPML. Thanks to @rainelement for your valuable contribution.
@@ -333,7 +336,5 @@ For a detailed guide on translating WooCommerce product tabs using Polylang, ple
 
 == Upgrade Notice ==
 
-= 1.5.0 =
-* [Improvement] Added compatibility with WPML. Thanks to @rainelement for your valuable contribution.
-* [Improvement] Improved compatibility with WordPress block code.
-* Tested with WC 10.0.4
+= 1.5.1 =
+* Tested with WC 10.1.1

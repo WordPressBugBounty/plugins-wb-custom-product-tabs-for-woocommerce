@@ -69,7 +69,7 @@ class Wb_Custom_Product_Tabs_For_Woocommerce {
 		if ( defined( 'WB_CUSTOM_PRODUCT_TABS_FOR_WOOCOMMERCE_VERSION' ) ) {
 			$this->version = WB_CUSTOM_PRODUCT_TABS_FOR_WOOCOMMERCE_VERSION;
 		} else {
-			$this->version = '1.5.0';
+			$this->version = '1.5.1';
 		}
 		$this->plugin_name = 'wb-custom-product-tabs-for-woocommerce';
 
@@ -467,13 +467,14 @@ class Wb_Custom_Product_Tabs_For_Woocommerce {
 		$matching_post_ids = wp_cache_get( $cache_key );
 
 		if ( false === $matching_post_ids ) {
-			// Not cached — run direct SQL to fetch posts where serialized product ID is present.
+			// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery
 			$matching_post_ids = $wpdb->get_col(
 				$wpdb->prepare(
 					"SELECT post_id FROM {$wpdb->postmeta} WHERE meta_key = '_wb_tab_products' AND meta_value LIKE %s",
 					'%' . $wpdb->esc_like( "i:$product_id;" ) . '%'
 				)
 			);
+			// phpcs:enable WordPress.DB.DirectDatabaseQuery.DirectQuery
 
 			wp_cache_set( $cache_key, $matching_post_ids );
 		}

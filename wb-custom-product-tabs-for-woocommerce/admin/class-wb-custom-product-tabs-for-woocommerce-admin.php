@@ -44,8 +44,8 @@ class Wb_Custom_Product_Tabs_For_Woocommerce_Admin {
 	 * Initialize the class and set its properties.
 	 *
 	 * @since    1.0.0
-	 * @param      string    $plugin_name       The name of this plugin.
-	 * @param      string    $version    The version of this plugin.
+	 * @param      string $plugin_name       The name of this plugin.
+	 * @param      string $version    The version of this plugin.
 	 */
 	public function __construct( $plugin_name, $version ) {
 
@@ -138,6 +138,7 @@ class Wb_Custom_Product_Tabs_For_Woocommerce_Admin {
 
 	/**
 	 *  Sanitize product tab data before saving
+	 *
 	 *  @since 1.0.0
 	 *  @since 1.1.2 Nickname option added for product specific tabs
 	 */
@@ -187,7 +188,6 @@ class Wb_Custom_Product_Tabs_For_Woocommerce_Admin {
 	 *  Save product tab data to database
 	 *
 	 *  @since 1.0.0
-	 *
 	 */
 	public function process_product_meta( $post_id, $post ) {
 		if ( empty( $post_id ) ) {
@@ -293,10 +293,12 @@ class Wb_Custom_Product_Tabs_For_Woocommerce_Admin {
 			// Skip if both arrays are empty — no cache to clear.
 			if ( ! empty( $existing_product_ids ) || ! empty( $selected_products ) ) {
 
-				$changed_product_ids = array_unique( array_merge(
-					array_diff( $existing_product_ids, $selected_products ),
-					array_diff( $selected_products, $existing_product_ids )
-				) );
+				$changed_product_ids = array_unique(
+					array_merge(
+						array_diff( $existing_product_ids, $selected_products ),
+						array_diff( $selected_products, $existing_product_ids )
+					)
+				);
 
 				if ( ! empty( $changed_product_ids ) ) {
 					foreach ( $changed_product_ids as $product_id ) {
@@ -304,7 +306,6 @@ class Wb_Custom_Product_Tabs_For_Woocommerce_Admin {
 					}
 				}
 			}
-
 
 			// Save tab slug.
 			$tab_slug = isset( $_POST['wb_tab_tab_slug'] ) ? sanitize_title( wp_unslash( $_POST['wb_tab_tab_slug'] ) ) : '';
@@ -364,9 +365,9 @@ class Wb_Custom_Product_Tabs_For_Woocommerce_Admin {
 	}
 
 	/**
-	* @since 1.0.9
-	* Global tabs, Add new product links on plugins page
-	*/
+	 * @since 1.0.9
+	 * Global tabs, Add new product links on plugins page
+	 */
 	public function plugin_action_links( $links ) {
 		$links[] = '<a href="' . esc_url( admin_url( 'edit.php?post_type=' . WB_TAB_POST_TYPE ) ) . '">' . __( 'Global Product tabs', 'wb-custom-product-tabs-for-woocommerce' ) . '</a>';
 
@@ -380,9 +381,9 @@ class Wb_Custom_Product_Tabs_For_Woocommerce_Admin {
 
 
 	/**
-	*   @since 1.1.0
-	*   Add nickname column in global tabs listing page
-	*/
+	 *   @since 1.1.0
+	 *   Add nickname column in global tabs listing page
+	 */
 	public function add_nickname_column( $columns ) {
 		$out = array();
 		foreach ( $columns as $column_key => $column_title ) {
@@ -395,9 +396,9 @@ class Wb_Custom_Product_Tabs_For_Woocommerce_Admin {
 	}
 
 	/**
-	*   @since 1.1.0
-	*   Add nickname column data, in global tabs listing page
-	*/
+	 *   @since 1.1.0
+	 *   Add nickname column data, in global tabs listing page
+	 */
 	public function add_nickname_column_data( $column, $post_id ) {
 		if ( 'wb_tab_nickname' == $column ) {
 			echo esc_html( Wb_Custom_Product_Tabs_For_Woocommerce::_get_global_tab_nickname( $post_id ) );
@@ -406,10 +407,10 @@ class Wb_Custom_Product_Tabs_For_Woocommerce_Admin {
 
 
 	/**
-	*   Add product categories/tags columns in global tabs listing page
-	*
-	*   @since 1.1.3
-	*/
+	 *   Add product categories/tags columns in global tabs listing page
+	 *
+	 *   @since 1.1.3
+	 */
 	public function add_product_cat_tag_column( $columns ) {
 		$out = array();
 
@@ -427,10 +428,10 @@ class Wb_Custom_Product_Tabs_For_Woocommerce_Admin {
 
 
 	/**
-	*   Add product categories/tags column data, in global tabs listing page
-	*
-	*   @since 1.1.3
-	*/
+	 *   Add product categories/tags column data, in global tabs listing page
+	 *
+	 *   @since 1.1.3
+	 */
 	public function add_product_cat_tag_column_data( $column, $post_id ) {
 		if ( 'wb_tab_product_tags' == $column || 'wb_tab_product_categories' == $column ) {
 			$this->_get_product_cat_tag_column_data( $post_id, ( 'wb_tab_product_tags' == $column ? 'product_tag' : 'product_cat' ) );
@@ -439,10 +440,10 @@ class Wb_Custom_Product_Tabs_For_Woocommerce_Admin {
 
 
 	/**
-	*   Prepare and print data for product categories/tags column data, in global tabs listing page
-	*
-	*   @since 1.1.3
-	*/
+	 *   Prepare and print data for product categories/tags column data, in global tabs listing page
+	 *
+	 *   @since 1.1.3
+	 */
 	private function _get_product_cat_tag_column_data( $post_id, $term = 'product_cat' ) {
 		$tab_product_terms = get_the_terms( $post_id, $term );
 
@@ -479,7 +480,7 @@ class Wb_Custom_Product_Tabs_For_Woocommerce_Admin {
 	 *  Is a post type edit/add new page
 	 *
 	 *  @since  1.1.5
-	 *  @param  string      $post_type      Post type
+	 *  @param  string $post_type      Post type
 	 *  @return bool        Is post type page or not
 	 */
 	public static function is_a_post_type_page( $post_type ) {
@@ -679,8 +680,8 @@ class Wb_Custom_Product_Tabs_For_Woocommerce_Admin {
 			return;
 		}
 
-		/* translators: Star rating */
 		$msg = sprintf(
+			/* translators: Star rating */
 			__( 'Click here to rate us %s, If you like the Custom product tabs plugin', 'wb-custom-product-tabs-for-woocommerce' ),
 			'⭐️⭐️⭐️⭐️⭐️',
 		);
@@ -703,7 +704,7 @@ class Wb_Custom_Product_Tabs_For_Woocommerce_Admin {
 	 *
 	 *  @since  1.2.0
 	 *  @since  1.2.2   Added some additional HTML tags.
-	 *  @param  array   $allowed_tags  Allowed tags.
+	 *  @param  array $allowed_tags  Allowed tags.
 	 *  @return array   $allowed_tags  Allowed tags.
 	 */
 	public function extend_tab_content_allowed_html( $allowed_tags ) {
@@ -902,7 +903,7 @@ class Wb_Custom_Product_Tabs_For_Woocommerce_Admin {
 	 * Extend tab content allowed style properties while sanitizing tab content.
 	 *
 	 *  @since  1.2.0
-	 *  @param  array   $css  Allowed CSS styles.
+	 *  @param  array $css  Allowed CSS styles.
 	 *  @return array   $css  Allowed CSS styles.
 	 */
 	public function extend_tab_content_allowed_css( $css ) {
@@ -917,8 +918,8 @@ class Wb_Custom_Product_Tabs_For_Woocommerce_Admin {
 	 * Alter the buttons in the tab content editor.
 	 *
 	 *  @since  1.2.3
-	 *  @param  string[]   $buttons    Buttons.
-	 *  @param  string     $editor_id  Editor Id.
+	 *  @param  string[] $buttons    Buttons.
+	 *  @param  string   $editor_id  Editor Id.
 	 *  @return string[]   $buttons    Buttons.
 	 */
 	public function alter_editor_buttons( $buttons, $editor_id ) {
@@ -949,7 +950,7 @@ class Wb_Custom_Product_Tabs_For_Woocommerce_Admin {
 	 *  Add global tabs to polylang custom post type list.
 	 *
 	 *  @since  1.2.4
-	 *  @param  array   $post_types     Post types array.
+	 *  @param  array $post_types     Post types array.
 	 *  @return array   $post_types     Post types array.
 	 */
 	public function add_global_tabs_to_pll_post_type_list( $post_types ) {
@@ -1020,7 +1021,8 @@ class Wb_Custom_Product_Tabs_For_Woocommerce_Admin {
 	 */
 	public function settings_page() {
 
-		$tab      = isset( $_GET['wb_cptb_tab'] ) ? sanitize_text_field( wp_unslash( $_GET['wb_cptb_tab'] ) ) : 'general';
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Nonce verification is not required.
+		$tab      = isset( $_GET['wb_cptb_tab'] ) ? sanitize_text_field( wp_unslash( $_GET['wb_cptb_tab'] ) ) : 'general'; // @codingStandardsIgnoreLine
 		$page_url = admin_url( 'options-general.php?page=wb-product-tab-settings' );
 
 		include_once WB_TAB_ROOT_PATH . 'admin/views/settings.php';
@@ -1079,16 +1081,15 @@ class Wb_Custom_Product_Tabs_For_Woocommerce_Admin {
 				$is_show_banner = true;
 				update_option( 'wb_cptb_review_banner_state', 1 );
 			}
-		} else {
-			if ( 1 === (int) $banner_state ) { //Show now.
+		} elseif ( 1 === (int) $banner_state ) {
+			// Show now.
 				$is_show_banner = true;
-			} elseif ( 3 === (int) $banner_state ) { // Remind.
+		} elseif ( 3 === (int) $banner_state ) { // Remind.
 
-				$banner_remind_start = (int) get_option( 'wb_cptb_review_banner_remind_start', 0 );
-				$two_week_before     = time() - 1209600; // After two weeks.
-				if ( 0 < $banner_remind_start && $two_week_before > $banner_remind_start ) {
-					$is_show_banner = true;
-				}
+			$banner_remind_start = (int) get_option( 'wb_cptb_review_banner_remind_start', 0 );
+			$two_week_before     = time() - 1209600; // After two weeks.
+			if ( 0 < $banner_remind_start && $two_week_before > $banner_remind_start ) {
+				$is_show_banner = true;
 			}
 		}
 
@@ -1134,7 +1135,7 @@ class Wb_Custom_Product_Tabs_For_Woocommerce_Admin {
 							data:{
 								action: 'wb_tabs_review_banner_dismiss',
 								review_action: review_action,
-								_nonce: '<?php echo wp_create_nonce( 'wb_tabs_review_dismiss_nonce' ); ?>',
+								_nonce: '<?php echo esc_html( wp_create_nonce( 'wb_tabs_review_dismiss_nonce' ) ); ?>',
 							},
 							success:function(data){
 								if ( ! data.status ) {
@@ -1217,22 +1218,25 @@ class Wb_Custom_Product_Tabs_For_Woocommerce_Admin {
 
 		global $wpdb;
 
+		// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		$local_total = $wpdb->get_var(
 			$wpdb->prepare(
 				"
-		    SELECT SUM(
-		        CASE 
-		            WHEN meta_value LIKE 'a:%%:{%%' 
-		                THEN CAST(SUBSTRING_INDEX(SUBSTRING_INDEX(meta_value, ':', 2), ':', -1) AS UNSIGNED)
-		            ELSE 0
-		        END
-		    ) AS total_count
-		    FROM {$wpdb->postmeta}
-		    WHERE meta_key = %s
-		",
+		        SELECT SUM(
+		            CASE 
+		                WHEN meta_value LIKE %s 
+		                    THEN CAST(SUBSTRING_INDEX(SUBSTRING_INDEX(meta_value, ':', 2), ':', -1) AS UNSIGNED)
+		                ELSE 0
+		            END
+		        ) AS total_count
+		        FROM {$wpdb->postmeta}
+		        WHERE meta_key = %s
+		        ",
+				'%' . $wpdb->esc_like( 'a:{' ) . '%',
 				'wb_custom_tabs'
 			)
 		);
+		// phpcs:enable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 
 		$count        = wp_count_posts( 'wb-custom-tabs' );
 		$global_total = isset( $count->publish ) ? $count->publish : 0;
@@ -1264,23 +1268,26 @@ class Wb_Custom_Product_Tabs_For_Woocommerce_Admin {
 
 	/**
 	 *  Translation request banner.
-	 * 	
-	 * 	@since 1.5.0
+	 *
+	 *  @since 1.5.0
 	 */
 	public function show_translation_request_banner() {
 		$languages = get_available_languages();
 
-		$non_english_languages = array_filter( $languages, function( $lang ) {
-		    return strpos( $lang, 'en_' ) !== 0;
-		});
-		
+		$non_english_languages = array_filter(
+			$languages,
+			function ( $lang ) {
+				return strpos( $lang, 'en_' ) !== 0;
+			}
+		);
+
 		if ( ! empty( $non_english_languages ) ) {
-		    ?>
-		    <div style="display:inline-block; background-color:#fff3cd; padding:5px 15px; border:solid 1px #ffeeba; border-radius:5px; color:#856404; margin:15px 0px">
-		   		<h4 style="margin:0px; padding:0px; margin-bottom:5px;">💬 Help Us Translate!</h4>
+			?>
+			<div style="display:inline-block; background-color:#fff3cd; padding:5px 15px; border:solid 1px #ffeeba; border-radius:5px; color:#856404; margin:15px 0px">
+					<h4 style="margin:0px; padding:0px; margin-bottom:5px;">💬 Help Us Translate!</h4>
 				<p style="margin:0px; padding:0px;">Want to see this plugin in your language? <a href="https://translate.wordpress.org/projects/wp-plugins/wb-custom-product-tabs-for-woocommerce/" target="_blank">Contribute a translation</a> and become a proud WordPress translation contributor. Your support makes a difference! </p>
 			</div>
-		    <?php
+			<?php
 		}
 	}
 }

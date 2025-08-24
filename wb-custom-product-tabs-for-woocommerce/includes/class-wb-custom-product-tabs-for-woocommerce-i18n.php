@@ -33,11 +33,5 @@ class Wb_Custom_Product_Tabs_For_Woocommerce_i18n {
 	 * @since    1.0.0
 	 */
 	public function load_plugin_textdomain() {
-
-		load_plugin_textdomain(
-			'wb-custom-product-tabs-for-woocommerce',
-			false,
-			dirname( plugin_basename( __FILE__ ), 2 ) . '/languages/'
-		);
 	}
 }
