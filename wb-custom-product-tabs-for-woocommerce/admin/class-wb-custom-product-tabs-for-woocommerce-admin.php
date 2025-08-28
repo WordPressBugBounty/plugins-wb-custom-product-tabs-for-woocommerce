@@ -1096,7 +1096,7 @@ class Wb_Custom_Product_Tabs_For_Woocommerce_Admin {
 		if ( $is_show_banner ) {
 			?>
 			<div class="notice notice-success wb-tabs-review-notice">
-				<p><strong>🎉 Amazing! You've created more than 50 product tabs using Custom Product Tabs for WooCommerce.</strong></p>
+				<p><strong>🎉 Amazing! You've created more than 10 product tabs using Custom Product Tabs for WooCommerce.</strong></p>
 				<p>
 					We're excited to see you're getting great value from the plugin. If it's improved your workflow, we'd really appreciate it if you could leave us a quick 5-star review. It only takes a moment, and your support helps us continue improving the plugin and offering excellent support.
 				</p>
@@ -1243,7 +1243,7 @@ class Wb_Custom_Product_Tabs_For_Woocommerce_Admin {
 
 		$total = $local_total + $global_total;
 
-		return ( 50 <= $total );
+		return ( 10 < $total );
 	}
 
 	/**

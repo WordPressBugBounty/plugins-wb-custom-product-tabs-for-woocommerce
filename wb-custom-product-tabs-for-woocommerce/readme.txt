@@ -5,7 +5,7 @@ Tags: product tabs, tab manager, woocommerce custom tabs, woocommerce product ta
 Requires at least: 3.5.0
 Tested up to: 6.8
 Requires PHP: 5.6
-Stable tag: 1.5.1
+Stable tag: 1.5.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -146,6 +146,9 @@ For a detailed guide on translating WooCommerce product tabs using Polylang, ple
 6. Help & FAQs
 
 == Changelog ==
+
+= 1.5.2 =
+* [Fix] Resolved issue where WPBakery Page Builder block content was breaking inside tabs.
 
 = 1.5.1 =
 * Tested with WC 10.1.1
@@ -336,5 +339,5 @@ For a detailed guide on translating WooCommerce product tabs using Polylang, ple
 
 == Upgrade Notice ==
 
-= 1.5.1 =
-* Tested with WC 10.1.1
+= 1.5.2 =
+* [Fix] Resolved issue where WPBakery Page Builder block content was breaking inside tabs.

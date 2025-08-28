@@ -177,9 +177,9 @@ class Wb_Custom_Product_Tabs_For_Woocommerce_Public {
 			if ( $use_legacy_tab_content_processing ) {
 				echo do_shortcode( wp_kses_post( wpautop( $content ) ) );
 			} elseif ( Wb_Custom_Product_Tabs_For_Woocommerce::use_custom_the_content() ) {
-				echo wp_kses_post( $this->safe_the_content_render( $content ) );
+				echo $this->safe_the_content_render( $content ); // phpcs:ignore WordPress.Security.EscapeOutput
 			} else {
-				echo wp_kses_post( apply_filters( 'the_content', $content ) );
+				echo apply_filters( 'the_content', $content ); // phpcs:ignore WordPress.Security.EscapeOutput
 			}
 			?>
 		</div>
