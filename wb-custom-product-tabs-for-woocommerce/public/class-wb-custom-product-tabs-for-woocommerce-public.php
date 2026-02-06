@@ -221,17 +221,18 @@ class Wb_Custom_Product_Tabs_For_Woocommerce_Public {
 			?>
 			<script type="text/javascript">
 				function wb_cptb_activate_tab_by_url(){
-					let hash  = window.location.hash; 
-					if ( hash && hash.toLowerCase().indexOf( '#tab-wb_cptb_' ) === 0) {
+					let hash  = window.location.hash;
+					let tab_hd_link = jQuery('.woocommerce-tabs.wc-tabs-wrapper .tabs.wc-tabs li a[href="' + hash + '"]');
+					if ( hash 
+						&& hash.toLowerCase().indexOf( '#tab-' ) === 0 
+						&& tab_hd_link.length ) {
 						setTimeout(function(){
-							jQuery('.woocommerce-tabs.wc-tabs-wrapper .tabs.wc-tabs li a[href="' + hash + '"]').trigger('click');
+							tab_hd_link.trigger('click');
+							jQuery('html, body').scrollTop(jQuery(hash).offset().top-50);
 						}, 0);					
 					}
 				}
 				jQuery(document).ready(function(){ 
-					wb_cptb_activate_tab_by_url();
-				});
-				jQuery(window).on('hashchange', function() {
 					wb_cptb_activate_tab_by_url();
 				});
 			</script>
@@ -286,4 +287,34 @@ class Wb_Custom_Product_Tabs_For_Woocommerce_Public {
 	    return $content;
 	}
 
+	/**
+	 * Hide the default WooCommerce tabs based on plugin settings.
+	 *
+	 * @since 1.6.0
+	 * @param array $tabs Array of WooCommerce tabs.
+	 * @return array Modified tabs.
+	 */
+	public function toggle_default_tabs( $tabs ) {
+
+	    $default_tabs_status = Wb_Custom_Product_Tabs_For_Woocommerce::get_default_woo_tab_status();
+
+	    $supported_tabs = array(
+	        'description',
+	        'additional_information',
+	        'reviews',
+	    );
+
+	    if ( is_array( $tabs ) && is_array( $default_tabs_status ) ) {
+
+	        foreach ( $supported_tabs as $key ) {
+
+	            if ( isset( $tabs[ $key ] ) && ! in_array( $key, $default_tabs_status, true ) ) {
+	                unset( $tabs[ $key ] );
+	            }
+
+	        }
+	    }
+
+	    return $tabs;
+	}
 }

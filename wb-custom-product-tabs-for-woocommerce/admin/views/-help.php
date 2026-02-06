@@ -244,6 +244,34 @@ if ( ! defined( 'ABSPATH' ) ) {
 			</div>
 		</div>
 
+		<!-- Question: 6 -->
+		<div class="wb-cptb-accordion-item">
+			<button class="wb-cptb-accordion-button">
+				<?php esc_html_e( 'Can I export and import my product tabs along with products?', 'wb-custom-product-tabs-for-woocommerce' ); ?>
+			</button>
+			<div class="wb-cptb-accordion-content">
+				<p><?php esc_html_e( 'Yes. Only product-specific tabs are exported along with the products. To include them, make sure you export the product meta field named wb_custom_tabs.', 'wb-custom-product-tabs-for-woocommerce' ); ?></p>
+				<p><?php esc_html_e( 'Global tabs are stored as a custom post type and can be exported separately.', 'wb-custom-product-tabs-for-woocommerce' ); ?></p>
+				<p><?php 
+				// translators: %1$s: HTML a tag opening for WordPress Importer plugin page, %2$s: HTML a tag closing.
+				echo wp_kses_post( sprintf( __( 'You can export them using the default WordPress Exporter or import them using the %1$sWordPress Importer%2$s plugin by wordpressdotorg.', 'wb-custom-product-tabs-for-woocommerce' ), '<a href="https://wordpress.org/plugins/wordpress-importer/" target="_blank">', '</a>') ); ?></p>
+				<p><?php esc_html_e( 'When using the default exporter, there’s no need to manually select meta fields or taxonomies, as all related data is included automatically.', 'wb-custom-product-tabs-for-woocommerce' ); ?></p>
+				<p><?php esc_html_e( 'If you\'re using a third-party export tool, ensure you also export the related taxonomies — Categories, Tags, and Brands — along with the following hidden meta fields: _wb_tab_products, _wb_tab_slug, _wb_tab_nickname, and _wb_tab_position.', 'wb-custom-product-tabs-for-woocommerce' ); ?></p>
+				<p>⚠️<?php esc_html_e( 'Important:', 'wb-custom-product-tabs-for-woocommerce' ); ?> <br />
+					<?php esc_html_e( 'Before importing the tabs, you must first import Products, Categories, Tags, and Brands. This ensures that all tab assignments are mapped correctly to the corresponding items.', 'wb-custom-product-tabs-for-woocommerce' ); ?>
+				</p>
+			</div>
+		</div>
+
+		<!-- Question: 7 -->
+		<div class="wb-cptb-accordion-item">
+			<button class="wb-cptb-accordion-button">
+				<?php esc_html_e( 'Can I disable WooCommerce default tabs?', 'wb-custom-product-tabs-for-woocommerce' ); ?>
+			</button>
+			<div class="wb-cptb-accordion-content">
+				<p><?php esc_html_e( 'Yes. The plugin allows you to control which default WooCommerce tabs appear on product pages. You can enable or disable the Description, Additional Information, and Reviews tabs directly from the plugin settings.', 'wb-custom-product-tabs-for-woocommerce' ); ?></p>
+			</div>
+		</div>
 	</div>
 </div>
 

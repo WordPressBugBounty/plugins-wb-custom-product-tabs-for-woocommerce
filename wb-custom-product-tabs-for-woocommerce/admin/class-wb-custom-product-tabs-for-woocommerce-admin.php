@@ -210,16 +210,8 @@ class Wb_Custom_Product_Tabs_For_Woocommerce_Admin {
 	 *  @since 1.2.4 Added compatibility for brands.
 	 */
 	public function register_global_tabs() {
-		$taxonomies = array( 'product_cat', 'product_tag', 'product_brand' );
-
-		// Add compatibility for thirdparty brand plugins.
-		$brand_taxonamies = Wb_Custom_Product_Tabs_For_Woocommerce::_get_thirdparty_brand_taxonamies();
-
-		foreach ( $brand_taxonamies as $brand_taxonamy ) {
-			if ( is_string( $brand_taxonamy ) ) {
-				$taxonomies[] = $brand_taxonamy;
-			}
-		}
+		
+		$taxonomies = Wb_Custom_Product_Tabs_For_Woocommerce::get_taxonomy_list();
 
 		register_post_type(
 			WB_TAB_POST_TYPE,
@@ -690,9 +682,8 @@ class Wb_Custom_Product_Tabs_For_Woocommerce_Admin {
 			jQuery(document).ready( function() {
 				jQuery('.wp-list-table').after('<a href="https://wordpress.org/support/plugin/wb-custom-product-tabs-for-woocommerce/reviews/?rate=5#new-post" target="_blank" style="display:inline-block; box-shadow:2px 1px 2px 0px #e2d5d5; margin:0px; padding:10px; box-sizing:border-box; margin-bottom:15px; border-left: solid 4px blueviolet; background:#333; color:#fff; text-decoration:none; position:fixed; bottom:0px; z-index:10000; left:50%; transform:translate(-50%, 0%);"><?php echo wp_kses_post( $msg ); ?></a>');
 
-				// jQuery('.page-title-action').after('<a style="margin-left:10px; font-weight:bold; background-image: linear-gradient(75deg, #db3ef6, #400cb4); color: #fff; padding:5px 10px; border:solid 1px #d73df4; border-radius:5px; top:-3px; display: inline-block; position: relative; text-decoration:none;" href="https://webbuilder143.com/support-our-work/?utm_source=plugin&utm_medium=global-tabs&utm_campaign=add-new&utm_id=tabs-plugin&utm_content=donate" target="_blank"><?php esc_html_e( 'Donate to support the Custom Product Tabs plugin.', 'wb-custom-product-tabs-for-woocommerce' ); ?></a>');
 
-				jQuery('.page-title-action').after('<a style="margin-left:10px; margin-top: 10px; display:inline-block; position: relative; text-decoration:none;" class="button button-primary" href="<?php echo esc_url( admin_url( 'options-general.php?page=wb-product-tab-settings' ) ); ?>"><?php esc_html_e( 'Tab settings.', 'wb-custom-product-tabs-for-woocommerce' ); ?></a>');
+				jQuery('.page-title-action').after('<a style="margin-left:10px; margin-top: 10px; display:inline-block; position: relative; text-decoration:none;" class="button button-primary" href="<?php echo esc_url( admin_url( 'options-general.php?page=wb-product-tab-settings' ) ); ?>"><?php esc_html_e( 'Tab settings', 'wb-custom-product-tabs-for-woocommerce' ); ?></a>');
 			});
 		</script>
 		<?php
@@ -997,6 +988,21 @@ class Wb_Custom_Product_Tabs_For_Woocommerce_Admin {
 				'sanitize_callback' => 'absint',
 			)
 		);
+
+		/**
+		 * 	Register settings to disable WooCommerce default tabs.
+		 * 
+		 * 	@since 1.6.0
+		 */
+		register_setting(
+		    'wb_cptb_custom_tab_settings_group',
+		    'wb_cptb_enable_default_tabs',
+		    array(
+		        'type' => 'array',
+		        'sanitize_callback' => array( $this, 'sanitize_default_tab_status' ),
+		        'default' => array('description', 'additional_information', 'reviews'),
+		    )
+		);
 	}
 
 	/**
@@ -1083,7 +1089,7 @@ class Wb_Custom_Product_Tabs_For_Woocommerce_Admin {
 			}
 		} elseif ( 1 === (int) $banner_state ) {
 			// Show now.
-				$is_show_banner = true;
+			$is_show_banner = true;
 		} elseif ( 3 === (int) $banner_state ) { // Remind.
 
 			$banner_remind_start = (int) get_option( 'wb_cptb_review_banner_remind_start', 0 );
@@ -1098,7 +1104,7 @@ class Wb_Custom_Product_Tabs_For_Woocommerce_Admin {
 			<div class="notice notice-success wb-tabs-review-notice">
 				<p><strong>🎉 Amazing! You've created more than 10 product tabs using Custom Product Tabs for WooCommerce.</strong></p>
 				<p>
-					We're excited to see you're getting great value from the plugin. If it's improved your workflow, we'd really appreciate it if you could leave us a quick 5-star review. It only takes a moment, and your support helps us continue improving the plugin and offering excellent support.
+					We're excited to see that you're getting great value from the plugin. We've spent countless hours refining every feature to make it as smooth and useful as it is today. If it has improved your workflow, we'd really appreciate it if you could leave us a quick 5-star review. It only takes a moment, and your support helps us continue improving the plugin and providing excellent support.
 				</p>
 				<p>Your feedback matters — and it helps others discover the plugin too!</p>
 				<p>
@@ -1289,5 +1295,153 @@ class Wb_Custom_Product_Tabs_For_Woocommerce_Admin {
 			</div>
 			<?php
 		}
+	}
+
+	/**
+	 * Converts global tab product IDs to slugs when exporting via the WordPress export tool.
+	 *
+	 * @since 1.5.3
+	 * @param array $args Array of export arguments.
+	 */
+	public function convert_product_id_to_slug_on_export( $args ) {
+	    
+	    // Only proceed if exporting product tabs or all content types.
+	    if ( empty( $args['content'] ) || ( $args['content'] !== WB_TAB_POST_TYPE && $args['content'] !== 'all' ) ) {
+	        return;
+	    }
+
+	    // Fetch all tabs.
+	    $tabs = get_posts( array(
+	        'post_type'      => WB_TAB_POST_TYPE,
+	        'posts_per_page' => -1,
+	        'post_status'    => 'any',
+	        'fields'         => 'ids',
+	        'suppress_filters' => false,
+	    ) );
+
+	    if ( empty( $tabs ) ) {
+	        return;
+	    }
+
+	    foreach ( $tabs as $tab_id ) {
+	        $product_ids = get_post_meta( $tab_id, '_wb_tab_products', true );
+
+	        if ( empty( $product_ids ) || ! is_array( $product_ids ) ) {
+	            continue;
+	        }
+
+	        $product_slugs = array();
+
+	        foreach ( $product_ids as $product_id ) {
+	            $slug = get_post_field( 'post_name', $product_id );
+	            if ( $slug ) {
+	                $product_slugs[] = $slug;
+	            }
+	        }
+
+	        // Store or update slugs meta. 
+	        update_post_meta( $tab_id, '_wb_tab_products_slug', implode( '|', $product_slugs ) );
+	    }
+	}
+
+	/**
+	 * Remaps global tab product meta during WordPress import.
+	 *
+	 * This function runs through the `wp_import_post_meta` filter before post meta is inserted.
+	 * It checks for the `_wb_tab_products_slug` meta (containing exported product slugs) and 
+	 * converts it back to the corresponding product IDs on the import site. The resulting IDs 
+	 * are stored in `_wb_tab_products` to maintain proper product associations after import.
+	 * 
+	 * @since 1.5.3
+	 *
+	 * @param array $postmeta An array of associative arrays containing the post meta to import.
+	 *                        Each meta item includes 'key' and 'value' keys.
+	 * @param int   $post_id  The ID of the post being imported.
+	 * @param array $post     The full post array being imported, including post type and content.
+	 *
+	 * @return array Modified post meta array with remapped `_wb_tab_products` values.
+	 */
+	public function remap_product_ids_based_on_slugs_on_import( $postmeta, $post_id, $post ) {
+
+	    // Only apply for product tabs custom post type.
+	    if ( empty( $post['post_type'] ) || $post['post_type'] !== WB_TAB_POST_TYPE ) {
+	        return $postmeta;
+	    }
+
+	    $product_slugs = array();
+	    $has_products_slug = false;
+
+	    // Find the `_wb_tab_products_slug` meta and extract its value.
+	    foreach ( $postmeta as $meta ) {
+	        if ( isset( $meta['key'] ) && '_wb_tab_products_slug' === $meta['key'] && ! empty( $meta['value'] ) ) {
+	            $product_slugs = explode( '|', $meta['value'] );
+	            $has_products_slug = ! empty( $product_slugs );
+	            break;
+	        }
+	    }
+
+	    if ( ! $has_products_slug ) {
+	        return $postmeta;
+	    }
+
+	    // Convert slugs back to product IDs in the import site.
+	    $product_ids = array();
+
+	    foreach ( $product_slugs as $slug ) {
+	        $product_obj = get_page_by_path( $slug, OBJECT, 'product' );
+
+	        if ( $product_obj && isset( $product_obj->ID ) ) {
+	            $product_ids[] = $product_obj->ID;
+	        }
+	    }
+
+	    // Update the `_wb_tab_products` meta with remapped IDs.
+	    $updated = false;
+	    foreach ( $postmeta as &$meta ) {
+	        if ( isset( $meta['key'] ) && $meta['key'] === '_wb_tab_products' ) {
+	            $meta['value'] = maybe_serialize( $product_ids );
+	            $updated = true;
+	            break;
+	        }
+	    }
+	    unset( $meta );
+
+	    // If the _wb_tab_products meta doesn't exist, create it.
+	    if ( ! $updated ) {
+	        $postmeta[] = array(
+	            'key'   => '_wb_tab_products',
+	            'value' => maybe_serialize( $product_ids ),
+	        );
+	    }
+
+	    return $postmeta;
+	}
+
+	/**
+	 * Sanitize WooCommerce default tab status option.
+	 *
+	 * @since 1.6.0
+	 * @param mixed $value Array of selected tab slugs.
+	 * @return string[] Sanitized tab slugs.
+	 */
+	public function sanitize_default_tab_status( $value ) {
+
+	    $allowed = array( 'description', 'additional_information', 'reviews' );
+
+	    // Ensure it's an array
+	    if ( ! is_array( $value ) ) {
+	        return array();
+	    }
+
+	    // Sanitize each value
+	    $sanitized = array();
+	    foreach ( $value as $item ) {
+	        $item = sanitize_text_field( $item );
+	        if ( in_array( $item, $allowed, true ) ) {
+	            $sanitized[] = $item;
+	        }
+	    }
+
+	    return $sanitized;
 	}
 }

@@ -69,7 +69,7 @@ class Wb_Custom_Product_Tabs_For_Woocommerce {
 		if ( defined( 'WB_CUSTOM_PRODUCT_TABS_FOR_WOOCOMMERCE_VERSION' ) ) {
 			$this->version = WB_CUSTOM_PRODUCT_TABS_FOR_WOOCOMMERCE_VERSION;
 		} else {
-			$this->version = '1.5.2';
+			$this->version = '1.6.4';
 		}
 		$this->plugin_name = 'wb-custom-product-tabs-for-woocommerce';
 
@@ -272,6 +272,22 @@ class Wb_Custom_Product_Tabs_For_Woocommerce {
 		$this->loader->add_action( 'admin_notices', $plugin_admin, 'review_banner', 10 );
 		$this->loader->add_action( 'wp_ajax_wb_tabs_review_banner_dismiss', $plugin_admin, 'review_banner_ajax', 10 );
 		$this->loader->add_action( 'admin_init', $plugin_admin, 'review_banner_non_ajax', 10 );
+
+
+		/**
+		 * Converts global tab product IDs to slugs when exporting via the WordPress export tool.
+		 *
+		 * @since 1.5.3
+		 */
+		$this->loader->add_action( 'export_wp', $plugin_admin, 'convert_product_id_to_slug_on_export', 10, 1 );
+
+
+		/**
+		 * Remaps global tab product id meta during WordPress import.
+		 *
+		 * @since 1.5.3
+		 */
+		$this->loader->add_filter( 'wp_import_post_meta', $plugin_admin, 'remap_product_ids_based_on_slugs_on_import', 10, 3 );
 	}
 
 	/**
@@ -303,6 +319,14 @@ class Wb_Custom_Product_Tabs_For_Woocommerce {
 		 * @since 1.3.3
 		 */
 		$this->loader->add_action( 'wp_footer', $plugin_public, 'activate_tab_by_url' );
+
+
+		/**
+		 * Hide the default WooCommerce tabs based on plugin settings.
+		 *
+		 * @since 1.6.0
+		 */
+		$this->loader->add_filter( 'woocommerce_product_tabs', $plugin_public, 'toggle_default_tabs', 20 );
 	}
 
 	/**
@@ -926,5 +950,41 @@ class Wb_Custom_Product_Tabs_For_Woocommerce {
 	 */
 	public static function use_custom_the_content() {
 		return wc_string_to_bool( get_option( 'wb_cptb_use_custom_the_content', 1 ) );
+	}
+
+
+	/**
+	 *  Get taxonomy list of Global Product tabs.
+	 *
+	 *  @since 1.6.0
+	 *  @return string[] Array of taxonomy slugs.
+	 */
+	public static function get_taxonomy_list() {
+		
+		$taxonomies = array( 'product_cat', 'product_tag', 'product_brand' );
+
+		// Add compatibility for thirdparty brand plugins.
+		$brand_taxonamies = self::_get_thirdparty_brand_taxonamies();
+
+		foreach ( $brand_taxonamies as $brand_taxonamy ) {
+			if ( is_string( $brand_taxonamy ) ) {
+				$taxonomies[] = $brand_taxonamy;
+			}
+		}
+
+		return $taxonomies;
+	}
+
+	/**
+	 *  Get WooCommerce default tab status.
+	 *
+	 *  @since 1.6.0
+	 *  @return string[] Slugs of enabled WooCommerce default tabs.
+	 */
+	public static function get_default_woo_tab_status() {
+		return get_option(
+            'wb_cptb_enable_default_tabs',
+            array( 'description', 'additional_information', 'reviews' )
+        );
 	}
 }

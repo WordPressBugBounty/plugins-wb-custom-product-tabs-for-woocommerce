@@ -57,6 +57,35 @@ if ( ! defined( 'ABSPATH' ) ) {
 			</tr>
 
 			<tr valign="top">
+			    <th scope="row"><?php esc_html_e( 'Enable default tabs', 'wb-custom-product-tabs-for-woocommerce' ); ?></th>
+
+			    <td>
+			        <?php
+			        $default_tabs_status = Wb_Custom_Product_Tabs_For_Woocommerce::get_default_woo_tab_status();
+			        ?>
+
+			        <label style="display:block; margin-bottom:6px;">
+			            <input type="checkbox" name="wb_cptb_enable_default_tabs[]" value="description"
+			                <?php checked( in_array( 'description', $default_tabs_status, true ) ); ?> />
+			            <?php esc_html_e( 'Description', 'wb-custom-product-tabs-for-woocommerce' ); ?>
+			        </label>
+
+			        <label style="display:block; margin-bottom:6px;">
+			            <input type="checkbox" name="wb_cptb_enable_default_tabs[]" value="additional_information"
+			                <?php checked( in_array( 'additional_information', $default_tabs_status, true ) ); ?> />
+			            <?php esc_html_e( 'Additional Information', 'wb-custom-product-tabs-for-woocommerce' ); ?>
+			        </label>
+
+			        <label style="display:block; margin-bottom:6px;">
+			            <input type="checkbox" name="wb_cptb_enable_default_tabs[]" value="reviews"
+			                <?php checked( in_array( 'reviews', $default_tabs_status, true ) ); ?> />
+			            <?php esc_html_e( 'Reviews', 'wb-custom-product-tabs-for-woocommerce' ); ?>
+			        </label>
+			    </td>
+			</tr>
+
+
+			<tr valign="top">
 				<th scope="row"><?php esc_html_e( 'Default Behavior of Global Tabs', 'wb-custom-product-tabs-for-woocommerce' ); ?></th>
 				<td>
 					<label>
@@ -86,7 +115,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 			        </p>
 			    </td>
 			</tr>
+			<tr>
+				<td></td>
+				<td>
+					<?php submit_button(); ?>
+				</td>
+			</tr>
 		</table>
-		<?php submit_button(); ?>
 	</form>
 </div>

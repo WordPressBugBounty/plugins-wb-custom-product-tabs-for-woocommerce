@@ -1,15 +1,15 @@
 === Custom Product tabs for WooCommerce ===
 Contributors: webbuilder143
 Donate link: https://webbuilder143.com/?utm_source=wordpressorg&utm_medium=readme&utm_campaign=donate-link&utm_id=tabs-plugin&utm_content=donate
-Tags: product tabs, tab manager, woocommerce custom tabs, woocommerce product tabs, tabs plugin
+Tags: product tabs, tabs plugin, woocommerce custom tabs, woocommerce product tabs, tabs
 Requires at least: 3.5.0
-Tested up to: 6.8
+Tested up to: 6.9
 Requires PHP: 5.6
-Stable tag: 1.5.2
+Stable tag: 1.6.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Add unlimited additional tabs to WooCommerce products and assign them by category, tag, brand, or product. Supports sorting, shortcode etc.  
+Create unlimited WooCommerce tabs and assign them in bulk by category, tag, brand, or product. Also disable WooCommerce’s default product tabs.
 
 == Description ==
 
@@ -24,6 +24,10 @@ Enhance your WooCommerce product pages today with Custom Product Tabs for WooCom
 
 ✅ Unlimited Custom Tabs – Add as many custom tabs as needed for your WooCommerce products.
 ✅ Global Tabs – Create tabs that can be assigned to multiple products based on categories, tags, and WooCommerce brands.
+✅ Category specific Tabs.
+✅ Option to disable WooCommerce default product tabs such as the Description, Additional Information, and Reviews tabs.
+✅ Product specific Tabs.
+✅ Supports the default WordPress Exporter and the WordPress Importer plugin to migrate the tabs.
 ✅ Brand-Specific Tabs – Fully supports WooCommerce's default brand functionality and third-party brand plugins like [Perfect Brands for WooCommerce](https://wordpress.org/plugins/perfect-woocommerce-brands/).
 ✅ YouTube Embed Support – Easily embed YouTube videos directly within product tabs.
 ✅ Sortable Tabs – Organize tabs with a priority input field for better content arrangement.
@@ -96,6 +100,9 @@ http://www.youtube.com/watch?v=F90dOxEjkE8
 = Where can I add tabs to a product? =
 To add tabs to a product, navigate to the product edit screen in WooCommerce. In the left corner of the Product Data box, you will find the "Custom Tabs" option.
 
+= Can I disable WooCommerce default tabs? =
+Absolutely. The plugin allows you to control which default WooCommerce tabs appear on product pages. You can enable or disable the Description, Additional Information, and Reviews tabs directly from the plugin settings.
+
 = Can I add HTML content? =
 Yes, you can add HTML content. The tab content section uses the standard WP editor, allowing you to include any HTML content supported by the WordPress post editor.
 
@@ -136,6 +143,14 @@ On the tab edit screen, you have the option to manually enter a tab slug. Altern
 = How do I translate tabs using Polylang? =
 For a detailed guide on translating WooCommerce product tabs using Polylang, please visit this article: [How to translate tabs using Polylang](https://webbuilder143.com/how-to-translate-woocommerce-product-tabs-with-polylang/?utm_source=wordpressorg&utm_medium=readme&utm_campaign=faq&utm_content=polylang).
 
+= How can I migrate my tabs from one site to another? =
+Our plugin supports the default WordPress Export tool for exporting, and you can import using the [WordPress Importer](https://wordpress.org/plugins/wordpress-importer/) plugin.
+
+You need to export and import Product-specific Tabs and Global Tabs separately, as they are custom post types.
+
+Before importing Global Tabs, make sure to import Products, Categories, Tags, and Brands first. This ensures that all tab assignments are properly mapped to their corresponding items.
+
+
 == Screenshots ==
 
 1. Edit window for product specific tab
@@ -146,6 +161,26 @@ For a detailed guide on translating WooCommerce product tabs using Polylang, ple
 6. Help & FAQs
 
 == Changelog ==
+
+= 1.6.4 =
+* Tested with: WooCommerce 10.4.3
+
+= 1.6.3 =
+* [Fix] Description tab was automatically focusing on product page load. Thanks to @elkevandrunen for reporting the issue.
+
+= 1.6.2 =
+* [Fix] Custom tab not activating when changing URL hash.
+
+= 1.6.1 =
+* Tested with WP 6.9
+
+= 1.6.0 =
+* [Add] New option to disable WooCommerce default tabs.
+* Tested with: WooCommerce 10.3.5
+
+= 1.5.3 =
+* [Improvement] Added compatibility with the WordPress Export tool and the WordPress Importer plugin by @wordpressdotorg.
+* Tested with: WooCommerce 10.2.2
 
 = 1.5.2 =
 * [Fix] Resolved issue where WPBakery Page Builder block content was breaking inside tabs.
@@ -339,5 +374,5 @@ For a detailed guide on translating WooCommerce product tabs using Polylang, ple
 
 == Upgrade Notice ==
 
-= 1.5.2 =
-* [Fix] Resolved issue where WPBakery Page Builder block content was breaking inside tabs.
+= 1.6.4 =
+* Tested with: WooCommerce 10.4.3

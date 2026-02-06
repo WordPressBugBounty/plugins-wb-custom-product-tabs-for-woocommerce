@@ -27,7 +27,10 @@ class Wb_Custom_Product_Tabs_For_Woocommerce_Feedback {
 		$this->reasons = array(
 			'not-working'              => __( 'Not working', 'wb-custom-product-tabs-for-woocommerce' ),
 			'found-better'             => __( 'Found better', 'wb-custom-product-tabs-for-woocommerce' ),
-			'not-meet-my-requirements' => __( "It doesn't meet my requirements", 'wb-custom-product-tabs-for-woocommerce' ),
+			'not-meet-my-requirements' => __( 'It doesn\'t meet my requirements', 'wb-custom-product-tabs-for-woocommerce' ),
+			'too-complex' => __('Plugin too complex', 'wb-custom-product-tabs-for-woocommerce'),
+            'conflicts-with-another' => __('Conflicts with another plugin', 'wb-custom-product-tabs-for-woocommerce'),
+            'temporary' => __('Temporary deactivation', 'wb-custom-product-tabs-for-woocommerce'),
 			'other'                    => __( 'Other', 'wb-custom-product-tabs-for-woocommerce' ),
 		);
 
@@ -40,6 +43,7 @@ class Wb_Custom_Product_Tabs_For_Woocommerce_Feedback {
 			.wb_cptb_feedback_popup_content{ width:100%; box-sizing:border-box; padding:15px; height:auto; font-size:14px; }
 			.wb_cptb_feedback_popup_content label{ width:100%; display:block; font-weight:bold; margin-top:20px; margin-bottom:5px;}
 			.wb_cptb_feedback_popup_content textarea{ width:100%; display:block; }
+			.wb_cptb_feedback_notice { background:#fcf9e8; border:1px solid #c3c4c7; border-left-width:4px; border-left-color:#dba617; box-shadow:0 1px 1px rgba(0, 0, 0, 0.04); padding: 1px 12px; }
 		</style>
 		<script type="text/javascript">
 			jQuery(document).ready(function(){
@@ -88,6 +92,13 @@ class Wb_Custom_Product_Tabs_For_Woocommerce_Feedback {
 				<div class="wb_cptb_feedback_popup_close" title="<?php esc_attr_e( 'Close', 'wb-custom-product-tabs-for-woocommerce' ); ?>">X</div>	
 			</div>
 			<div class="wb_cptb_feedback_popup_content">
+				<div>
+                    <div class="wb_cptb_feedback_notice"><p><?php 
+                    // translators: %1$s: HTML a tag opening for FAQ page., %2$s: HTML a tag closing for FAQ page. 
+                    echo wp_kses_post( sprintf( __('Before uninstalling, check our %1$sFAQ%2$s — your feature may already be included!', 'wb-custom-product-tabs-for-woocommerce'), '<a href="'.esc_url( admin_url( 'options-general.php?page=wb-product-tab-settings&wb_cptb_tab=help' ) ) .'" target="_blank">', '</a>' ) ); 
+                    ?> 
+                    </p></div>
+                </div>
 				<div>
 					<label><?php esc_html_e( 'Please choose a reason.', 'wb-custom-product-tabs-for-woocommerce' ); ?></label>
 					<select name="wb-cptb-uninstall-reason">
