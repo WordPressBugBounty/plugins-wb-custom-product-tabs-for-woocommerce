@@ -69,7 +69,7 @@ class Wb_Custom_Product_Tabs_For_Woocommerce {
 		if ( defined( 'WB_CUSTOM_PRODUCT_TABS_FOR_WOOCOMMERCE_VERSION' ) ) {
 			$this->version = WB_CUSTOM_PRODUCT_TABS_FOR_WOOCOMMERCE_VERSION;
 		} else {
-			$this->version = '1.6.4';
+			$this->version = '1.6.5';
 		}
 		$this->plugin_name = 'wb-custom-product-tabs-for-woocommerce';
 
@@ -251,6 +251,13 @@ class Wb_Custom_Product_Tabs_For_Woocommerce {
 		$this->loader->add_filter( 'pll_get_post_types', $plugin_admin, 'add_global_tabs_to_pll_post_type_list', 11 );
 
 		/**
+		 * Prevent Polylang from copying product IDs meta across translations.
+		 *
+		 * @since 1.6.5
+		 */
+		$this->loader->add_filter( 'pll_copy_post_metas', $plugin_admin, 'pll_exclude_products_meta_from_sync', 10, 1 );
+
+		/**
 		* Register settings.
 		*
 		* @since 1.3.0
@@ -288,6 +295,14 @@ class Wb_Custom_Product_Tabs_For_Woocommerce {
 		 * @since 1.5.3
 		 */
 		$this->loader->add_filter( 'wp_import_post_meta', $plugin_admin, 'remap_product_ids_based_on_slugs_on_import', 10, 3 );
+
+		/**
+		 * Fix product category count only to products.
+		 *
+		 * @since 1.6.5
+		 */
+		$this->loader->add_action( 'edited_product_cat', $plugin_admin, 'fix_product_cat_counts_only_products', 20 );
+		$this->loader->add_action( 'create_product_cat', $plugin_admin, 'fix_product_cat_counts_only_products', 20 );
 	}
 
 	/**
@@ -441,6 +456,61 @@ class Wb_Custom_Product_Tabs_For_Woocommerce {
 	}
 
 	/**
+	 * Get the default language product ID for Polylang.
+	 *
+	 * When tabs are stored once (often in default language product IDs), we must
+	 * map a translated product back to its default language ID for lookups.
+	 *
+	 * @since 1.6.5
+	 * @param int $product_id Product ID in any language.
+	 * @return int Default language product ID (or original if not translatable).
+	 */
+	private static function pll__get_default_language_product_id( $product_id ) {
+		$product_id = absint( $product_id );
+		if ( ! $product_id ) {
+			return 0;
+		}
+
+		if ( function_exists( 'pll_get_post' ) && function_exists( 'pll_default_language' ) ) {
+			$default_lang = pll_default_language();
+			if ( $default_lang ) {
+				$default_id = absint( pll_get_post( $product_id, $default_lang ) );
+				if ( $default_id ) {
+					return $default_id;
+				}
+			}
+		}
+
+		return $product_id;
+	}
+
+	/**
+	 * Translate a product ID to the current language for Polylang.
+	 *
+	 * @since 1.6.5
+	 * @param int $product_id Product ID in any language.
+	 * @return int Product ID in the current language when available.
+	 */
+	private static function pll__translate_product_id_to_current_language( $product_id ) {
+		$product_id = absint( $product_id );
+		if ( ! $product_id ) {
+			return 0;
+		}
+
+		if ( function_exists( 'pll_get_post' ) && function_exists( 'pll_current_language' ) ) {
+			$current_lang = pll_current_language();
+			if ( $current_lang ) {
+				$translated_id = absint( pll_get_post( $product_id, $current_lang ) );
+				if ( $translated_id ) {
+					return $translated_id;
+				}
+			}
+		}
+
+		return $product_id;
+	}
+
+	/**
 	 *  Taking original language term ids for WPML users.
 	 *
 	 *  @since 1.5.0
@@ -514,6 +584,7 @@ class Wb_Custom_Product_Tabs_For_Woocommerce {
 				'post__in'         => $matching_post_ids,
 				'posts_per_page'   => -1,
 				'suppress_filters' => false, // Enables WPML or Polylang filtering.
+				'cache_results'    => false,
 			)
 		);
 
@@ -586,6 +657,7 @@ class Wb_Custom_Product_Tabs_For_Woocommerce {
 		 */
 		$product_id     = (int) method_exists( $product, 'get_id' ) ? $product->get_id() : $product->ID;
 		$product_id     = self::wpml__get_original_product_id( $product_id ); // Returns original language product id for WPML users.
+		$product_id     = self::pll__get_default_language_product_id( $product_id ); // Default language ID for Polylang.
 		$is_wpml_active = self::is_wpml_active();
 		$tab_post_type  = defined( 'WB_TAB_POST_TYPE' ) ? WB_TAB_POST_TYPE : 'wb-custom-tabs';
 		$tab_ids        = array(); // This is to prevent duplicate tabs while executing queries.
@@ -708,6 +780,7 @@ class Wb_Custom_Product_Tabs_For_Woocommerce {
 				'post_type'        => $tab_post_type,
 				'posts_per_page'   => -1,
 				'suppress_filters' => false,
+				'cache_results'    => false,
 				'tax_query'        => $tax_query, // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query
 			)
 		);
@@ -744,6 +817,7 @@ class Wb_Custom_Product_Tabs_For_Woocommerce {
 					'post_type'        => $tab_post_type,
 					'posts_per_page'   => -1,
 					'suppress_filters' => false,
+					'cache_results'    => false,
 					'tax_query'        => $tax_query_not_exists, // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query
 				)
 			);
@@ -901,7 +975,21 @@ class Wb_Custom_Product_Tabs_For_Woocommerce {
 	 */
 	public static function _get_global_tab_products( $id ) {
 		$products = get_post_meta( $id, '_wb_tab_products', true );
-		return is_array( $products ) ? $products : array();
+		$products = is_array( $products ) ? $products : array();
+
+		// Polylang: Resolve stored product IDs to current language IDs at runtime.
+		if ( ! empty( $products ) && function_exists( 'pll_get_post' ) ) {
+			$mapped = array();
+			foreach ( $products as $pid ) {
+				$mapped_id = self::pll__translate_product_id_to_current_language( $pid );
+				if ( $mapped_id ) {
+					$mapped[] = $mapped_id;
+				}
+			}
+			$products = array_values( array_unique( $mapped ) );
+		}
+
+		return $products;
 	}
 
 

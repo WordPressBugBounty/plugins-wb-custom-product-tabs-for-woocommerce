@@ -675,13 +675,14 @@ class Wb_Custom_Product_Tabs_For_Woocommerce_Admin {
 		$msg = sprintf(
 			/* translators: Star rating */
 			__( 'Click here to rate us %s, If you like the Custom product tabs plugin', 'wb-custom-product-tabs-for-woocommerce' ),
-			'⭐️⭐️⭐️⭐️⭐️',
+			'⭐️⭐️⭐️⭐️⭐️'
 		);
 		?>
 		<script type="text/javascript"> 
 			jQuery(document).ready( function() {
 				jQuery('.wp-list-table').after('<a href="https://wordpress.org/support/plugin/wb-custom-product-tabs-for-woocommerce/reviews/?rate=5#new-post" target="_blank" style="display:inline-block; box-shadow:2px 1px 2px 0px #e2d5d5; margin:0px; padding:10px; box-sizing:border-box; margin-bottom:15px; border-left: solid 4px blueviolet; background:#333; color:#fff; text-decoration:none; position:fixed; bottom:0px; z-index:10000; left:50%; transform:translate(-50%, 0%);"><?php echo wp_kses_post( $msg ); ?></a>');
 
+				// jQuery('.page-title-action').after('<a style="margin-left:10px; font-weight:bold; background-image: linear-gradient(75deg, #db3ef6, #400cb4); color: #fff; padding:5px 10px; border:solid 1px #d73df4; border-radius:5px; top:-3px; display: inline-block; position: relative; text-decoration:none;" href="https://webbuilder143.com/support-our-work/?utm_source=plugin&utm_medium=global-tabs&utm_campaign=add-new&utm_id=tabs-plugin&utm_content=donate" target="_blank"><?php esc_html_e( 'Donate to support the Custom Product Tabs plugin.', 'wb-custom-product-tabs-for-woocommerce' ); ?></a>');
 
 				jQuery('.page-title-action').after('<a style="margin-left:10px; margin-top: 10px; display:inline-block; position: relative; text-decoration:none;" class="button button-primary" href="<?php echo esc_url( admin_url( 'options-general.php?page=wb-product-tab-settings' ) ); ?>"><?php esc_html_e( 'Tab settings', 'wb-custom-product-tabs-for-woocommerce' ); ?></a>');
 			});
@@ -951,6 +952,27 @@ class Wb_Custom_Product_Tabs_For_Woocommerce_Admin {
 		}
 
 		return $post_types;
+	}
+
+	/**
+	 * Prevent Polylang from syncing product assignments across translations.
+	 *
+	 * Polylang can copy/sync selected post meta values from the source post to its translations.
+	 * `_wb_tab_products` contains product IDs which are language-dependent and should not be
+	 * blindly copied, otherwise saving one translation overwrites others.
+	 *
+	 * @since 1.6.5
+	 * @param array $metas List of custom fields to copy.
+	 * @return array Filtered list of custom fields to copy.
+	 */
+	public function pll_exclude_products_meta_from_sync( $metas ) {
+		if ( ! is_array( $metas ) ) {
+			return $metas;
+		}
+
+		$excluded = array( '_wb_tab_products', '_wb_tab_products_slug' );
+
+		return array_values( array_diff( $metas, $excluded ) );
 	}
 
 
@@ -1443,5 +1465,28 @@ class Wb_Custom_Product_Tabs_For_Woocommerce_Admin {
 	    }
 
 	    return $sanitized;
+	}
+
+	/**
+	 * 	Fix product category count only to products.
+	 * 	Code contributed by @peterbohus
+	 * 
+	 * 	@since 1.6.5
+	 * 	@param int $term_id Term id
+	 */
+	public function fix_product_cat_counts_only_products( $term_id ) {
+		global $wpdb;
+
+		$taxonomy = 'product_cat';
+
+		$term_taxonomy_id = $wpdb->get_var( $wpdb->prepare(" SELECT term_taxonomy_id FROM {$wpdb->term_taxonomy} WHERE term_id = %d AND taxonomy = %s LIMIT 1 ", $term_id, $taxonomy));
+
+		if ( ! $term_taxonomy_id ) {
+			return;
+		}
+
+		$count = $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(DISTINCT p.ID) FROM {$wpdb->posts} p INNER JOIN {$wpdb->term_relationships} tr ON p.ID = tr.object_id WHERE tr.term_taxonomy_id = %d AND p.post_type = 'product' AND p.post_status = 'publish'", $term_taxonomy_id ) );
+
+		$wpdb->update( $wpdb->term_taxonomy, array( 'count' => (int) $count ), array('term_taxonomy_id' => (int) $term_taxonomy_id), array( '%d' ), array( '%d' ) );
 	}
 }

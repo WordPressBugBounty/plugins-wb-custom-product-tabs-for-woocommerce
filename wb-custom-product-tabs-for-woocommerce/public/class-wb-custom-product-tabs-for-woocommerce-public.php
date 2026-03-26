@@ -96,8 +96,18 @@ class Wb_Custom_Product_Tabs_For_Woocommerce_Public {
 		$wb_tabs     = apply_filters( 'wb_cptb_alter_tabs', $wb_tabs, $product );
 
 		$wb_inc = 0;
+
+		if ( ! is_array( $wb_tabs ) ) {
+			return $tabs;
+		}
+
 		foreach ( $wb_tabs as $key => $tab_data ) {
-			if ( trim( $tab_data['title'] ) != '' ) {
+
+			if ( ! is_array( $tab_data ) ) {
+				continue;
+			}
+
+			if ( isset( $tab_data['title'] ) && trim( $tab_data['title'] ) !== '' ) {
 				++$wb_inc;
 
 				// Filter to alter tab content.
@@ -124,9 +134,9 @@ class Wb_Custom_Product_Tabs_For_Woocommerce_Public {
 
 				$tabs[ $slug ] = array(
 					'title'    => trim( $tab_data['title'] ),
-					'priority' => $tab_data['position'],
+					'priority' => isset( $tab_data['position'] ) ? $tab_data['position'] : 10,
 					'callback' => array( $this, 'set_tab_content' ),
-					'content'  => $tab_data['content'],
+					'content'  => isset( $tab_data['content'] ) ? $tab_data['content'] : '',
 				);
 			}
 		}
