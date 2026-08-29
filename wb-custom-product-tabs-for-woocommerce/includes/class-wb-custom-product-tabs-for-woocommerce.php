@@ -69,7 +69,7 @@ class Wb_Custom_Product_Tabs_For_Woocommerce {
 		if ( defined( 'WB_CUSTOM_PRODUCT_TABS_FOR_WOOCOMMERCE_VERSION' ) ) {
 			$this->version = WB_CUSTOM_PRODUCT_TABS_FOR_WOOCOMMERCE_VERSION;
 		} else {
-			$this->version = '1.6.5';
+			$this->version = '1.6.6';
 		}
 		$this->plugin_name = 'wb-custom-product-tabs-for-woocommerce';
 
@@ -342,6 +342,14 @@ class Wb_Custom_Product_Tabs_For_Woocommerce {
 		 * @since 1.6.0
 		 */
 		$this->loader->add_filter( 'woocommerce_product_tabs', $plugin_public, 'toggle_default_tabs', 20 );
+
+
+		/**
+		 * Product tab shortcode
+		 *
+		 * @since 1.6.6
+		 */
+		add_shortcode( 'wb_cpt_product_tabs', array( $plugin_public, 'product_tabs_shortcode' ) );
 	}
 
 	/**

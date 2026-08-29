@@ -327,4 +327,36 @@ class Wb_Custom_Product_Tabs_For_Woocommerce_Public {
 
 	    return $tabs;
 	}
+
+
+	/**
+	 * Display product tabs using the native WooCommerce tabs template.
+	 *
+	 * This shortcode renders the default WooCommerce product tabs along with
+	 * any custom tabs added through the plugin via the `woocommerce_product_tabs`
+	 * filter.
+	 *
+	 * The shortcode is intended to be used on WooCommerce single product pages.
+	 *
+	 * Usage:
+	 * [wb_cpt_product_tabs]
+	 *
+	 * @since 1.6.6
+	 *
+	 * @return string The rendered WooCommerce product tabs.
+	 */
+	public function product_tabs_shortcode() {
+
+		if ( ! function_exists('is_product') || ! is_product() ) {
+			return '';
+		}
+		
+		ob_start();
+
+		wc_get_template( 'single-product/tabs/tabs.php' );
+
+		$output = ob_get_clean();
+
+		return $output;
+	}
 }
