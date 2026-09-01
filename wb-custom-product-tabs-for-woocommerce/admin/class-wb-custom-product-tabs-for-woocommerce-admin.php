@@ -158,9 +158,20 @@ class Wb_Custom_Product_Tabs_For_Woocommerce_Admin {
 		add_filter( 'safe_style_css', array( $this, 'extend_tab_content_allowed_css' ) );
 
 		$out = array();
+
+
+		// phpcs:disable WordPress.Security.NonceVerification.Missing -- nonce is already verified.
+		if (
+	        ! isset( $_POST['wb_tab'] )
+	        || ! is_array( $_POST['wb_tab'] )
+	    ) {
+	        return $out;
+	    }
+
+
 		for ( $i = 0; $i < 100000; $i++ ) {
 
-			// phpcs:disable WordPress.Security.NonceVerification.Missing -- nonce is already verified.
+			
 			$title    = isset( $_POST['wb_tab'][ $i ]['title'] ) ? trim( sanitize_text_field( wp_unslash( $_POST['wb_tab'][ $i ]['title'] ) ) ) : '';
 			$content  = isset( $_POST['wb_tab'][ $i ]['content'] ) ? trim( wp_kses_post( wp_unslash( $_POST['wb_tab'][ $i ]['content'] ) ) ) : '';
 			$position = (int) isset( $_POST['wb_tab'][ $i ]['position'] ) ? sanitize_text_field( wp_unslash( $_POST['wb_tab'][ $i ]['position'] ) ) : 0;
@@ -177,7 +188,7 @@ class Wb_Custom_Product_Tabs_For_Woocommerce_Admin {
 					'slug'     => $slug,
 				);
 			} else {
-				break;
+				continue;
 			}
 		}
 
@@ -188,11 +199,25 @@ class Wb_Custom_Product_Tabs_For_Woocommerce_Admin {
 	 *  Save product tab data to database
 	 *
 	 *  @since 1.0.0
+	 *  @since 1.6.7 [Fix] Fixed an issue that could cause product-specific tabs to be removed when saving a product.
 	 */
 	public function process_product_meta( $post_id, $post ) {
 		if ( empty( $post_id ) ) {
 			return;
 		}
+		
+		/*
+	     * Do not overwrite existing tab data when the tab fields were not
+	     * included in the product-save request.
+	     */
+		// phpcs:disable WordPress.Security.NonceVerification.Missing -- nonce is already verified.
+	    if (
+	        ! isset( $_POST['wb_tab'] )
+	        || ! is_array( $_POST['wb_tab'] )
+	    ) {
+	        return;
+	    }
+	    // phpcs:enable
 
 		$product            = wc_get_product( $post_id );
 		$sanitized_tab_data = $this->sanitize_tab_input();
@@ -264,6 +289,7 @@ class Wb_Custom_Product_Tabs_For_Woocommerce_Admin {
 	 *  @since 1.3.4    Added option to save tab slug.
 	 */
 	public function save_meta_box_data( $post_id ) {
+		// phpcs:disable WordPress.Security.NonceVerification.Missing -- nonce is already verified.
 		if ( array_key_exists( 'wb_tab_meta_box', $_POST ) ) {
 
 			$tab_position = (int) isset( $_POST['wb_tab_tab_position'] ) ? sanitize_text_field( wp_unslash( $_POST['wb_tab_tab_position'] ) ) : 0;
@@ -303,6 +329,7 @@ class Wb_Custom_Product_Tabs_For_Woocommerce_Admin {
 			$tab_slug = isset( $_POST['wb_tab_tab_slug'] ) ? sanitize_title( wp_unslash( $_POST['wb_tab_tab_slug'] ) ) : '';
 			update_post_meta( $post_id, '_wb_tab_slug', $tab_slug );
 		}
+		// phpcs:disable WordPress.Security.NonceVerification.Missing -- nonce is already verified.
 	}
 
 	/**
@@ -1130,7 +1157,7 @@ class Wb_Custom_Product_Tabs_For_Woocommerce_Admin {
 				</p>
 				<p>Your feedback matters — and it helps others discover the plugin too!</p>
 				<p>
-					<a href="https://wordpress.org/support/plugin/wb-custom-product-tabs-for-woocommerce/reviews/?filter=5#new-post" target="_blank" class="button button-primary wb-cptb-tabs-review-action" data-action="review_now">
+					<a href="https://wordpress.org/support/plugin/wb-custom-product-tabs-for-woocommerce/reviews/#new-post" target="_blank" class="button button-primary wb-cptb-tabs-review-action" data-action="review_now">
 						Yes! I'll leave a 5-star review ⭐⭐⭐⭐⭐
 					</a>
 					<a class="button button-secondary wb-cptb-tabs-review-action" data-action="already_reviewed">
@@ -1478,15 +1505,18 @@ class Wb_Custom_Product_Tabs_For_Woocommerce_Admin {
 		global $wpdb;
 
 		$taxonomy = 'product_cat';
-
+		// phpcs:disable WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.DirectQuery
 		$term_taxonomy_id = $wpdb->get_var( $wpdb->prepare(" SELECT term_taxonomy_id FROM {$wpdb->term_taxonomy} WHERE term_id = %d AND taxonomy = %s LIMIT 1 ", $term_id, $taxonomy));
+		// phpcs:enable WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.DirectQuery
 
 		if ( ! $term_taxonomy_id ) {
 			return;
 		}
 
+		// phpcs:disable WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.DirectQuery
 		$count = $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(DISTINCT p.ID) FROM {$wpdb->posts} p INNER JOIN {$wpdb->term_relationships} tr ON p.ID = tr.object_id WHERE tr.term_taxonomy_id = %d AND p.post_type = 'product' AND p.post_status = 'publish'", $term_taxonomy_id ) );
-
+		
 		$wpdb->update( $wpdb->term_taxonomy, array( 'count' => (int) $count ), array('term_taxonomy_id' => (int) $term_taxonomy_id), array( '%d' ), array( '%d' ) );
+		// phpcs:enable WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.DirectQuery
 	}
 }

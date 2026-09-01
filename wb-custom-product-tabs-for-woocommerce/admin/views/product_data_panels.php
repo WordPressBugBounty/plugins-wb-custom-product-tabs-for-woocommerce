@@ -7,6 +7,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	<div class="options_group">
 		<div class="wb_tab_main_hd">
 			<span class="wb_tab_main_hd_inner"><?php esc_html_e( 'Custom tabs', 'wb-custom-product-tabs-for-woocommerce' ); ?></span>
+			<input type="hidden" name="wb_tab[]">
 			<p class="wb_tab_addnew_btn_container">
 				<a class="button button-secondary" target="_blank" href="<?php echo esc_url( admin_url( 'options-general.php?page=wb-product-tab-settings&wb_cptb_tab=general' ) ); ?>"> 
 					<span class="dashicons dashicons-admin-generic" style="margin-top:7px; font-size:14px;"></span> 

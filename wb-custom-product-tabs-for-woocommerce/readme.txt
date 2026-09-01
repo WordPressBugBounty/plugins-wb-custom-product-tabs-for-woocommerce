@@ -2,10 +2,10 @@
 Contributors: webbuilder143
 Donate link: https://webbuilder143.com/?utm_source=wordpressorg&utm_medium=readme&utm_campaign=donate-link&utm_id=tabs-plugin&utm_content=donate
 Tags: product tabs, tabs plugin, woocommerce custom tabs, woocommerce product tabs, tabs
-Requires at least: 3.5.0
+Requires at least: 3.6.0
 Tested up to: 7.1
 Requires PHP: 5.6
-Stable tag: 1.6.6
+Stable tag: 1.6.7
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -162,10 +162,9 @@ Before importing Global Tabs, make sure to import Products, Categories, Tags, an
 
 == Changelog ==
 
-= 1.6.6 =
-* Tested with: WooCommerce 11.0
-* Tested with: WP 7.1
-* [Added] Added `[wb_cpt_product_tabs]` shortcode to display WooCommerce product tabs, including custom tabs.
+= 1.6.7 =
+* Updated WPML configuration to improve compatibility with WPML Advanced Translation Editor. Thanks @andrescifuentesr
+* Fixed an issue that could cause product-specific tabs to be removed when saving a product. Thanks @sirrahikkala
 
 = 1.6.5 =
 * Tested with: WooCommerce 10.6.1
@@ -383,7 +382,6 @@ Before importing Global Tabs, make sure to import Products, Categories, Tags, an
 
 == Upgrade Notice ==
 
-= 1.6.6 =
-* Tested with: WooCommerce 11.0
-* Tested with: WP 7.1
-* [Added] Added `[wb_cpt_product_tabs]` shortcode to display WooCommerce product tabs, including custom tabs.
+= 1.6.7 =
+* Updated WPML configuration to improve compatibility with WPML Advanced Translation Editor. Thanks @andrescifuentesr
+* Fixed an issue that could cause product-specific tabs to be removed when saving a product. Thanks @sirrahikkala

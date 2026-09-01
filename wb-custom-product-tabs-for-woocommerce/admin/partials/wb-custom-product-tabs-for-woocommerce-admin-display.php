@@ -11,6 +11,10 @@
  * @package    Wb_Custom_Product_Tabs_For_Woocommerce
  * @subpackage Wb_Custom_Product_Tabs_For_Woocommerce/admin/partials
  */
+
+if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
 ?>
 
 <!-- This file should primarily consist of HTML with a little bit of PHP. -->

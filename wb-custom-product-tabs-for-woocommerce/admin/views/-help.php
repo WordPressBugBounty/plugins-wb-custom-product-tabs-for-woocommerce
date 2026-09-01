@@ -272,6 +272,36 @@ if ( ! defined( 'ABSPATH' ) ) {
 				<p><?php esc_html_e( 'Yes. The plugin allows you to control which default WooCommerce tabs appear on product pages. You can enable or disable the Description, Additional Information, and Reviews tabs directly from the plugin settings.', 'wb-custom-product-tabs-for-woocommerce' ); ?></p>
 			</div>
 		</div>
+
+		<!-- Question: 8 -->
+		<div class="wb-cptb-accordion-item">
+			<button class="wb-cptb-accordion-button">
+				<?php esc_html_e( 'My theme or page builder does not display the product tabs. How can I display them?', 'wb-custom-product-tabs-for-woocommerce' ); ?>
+			</button>
+			<div class="wb-cptb-accordion-content">
+				<p><?php esc_html_e( 'If your theme or page builder does not display the product tabs automatically on the product page, you can use the Product Tabs shortcode to display them manually.', 'wb-custom-product-tabs-for-woocommerce' ); ?></p>
+
+				<p><?php esc_html_e( 'Add the shortcode to a suitable location in your product template or page builder:', 'wb-custom-product-tabs-for-woocommerce' ); ?></p>
+
+				<p>[wb_cpt_product_tabs]</p>
+
+				<p><?php esc_html_e( 'The shortcode automatically displays the tabs assigned to the current product, including applicable global and product-specific tabs.', 'wb-custom-product-tabs-for-woocommerce' ); ?></p>
+
+				<p><?php esc_html_e( 'This is especially useful when your theme or page builder does not support or properly display the plugin\'s product tabs.', 'wb-custom-product-tabs-for-woocommerce' ); ?></p></p>
+			</div>
+		</div>
+
+		<!-- Question: 9 -->
+		<div class="wb-cptb-accordion-item">
+			<button class="wb-cptb-accordion-button">
+				<?php esc_html_e( 'When should I use the Product Tabs shortcode?', 'wb-custom-product-tabs-for-woocommerce' ); ?>
+			</button>
+			<div class="wb-cptb-accordion-content">
+				<p><?php esc_html_e( 'The shortcode is mainly intended as an alternative way to display product tabs when your theme or page builder does not automatically display them.', 'wb-custom-product-tabs-for-woocommerce' ); ?></p>
+
+				<p><?php esc_html_e( 'If the product tabs are already displayed correctly by your theme, you do not need to use the shortcode.', 'wb-custom-product-tabs-for-woocommerce' ); ?></p>
+			</div>
+		</div>
 	</div>
 </div>
 
